@@ -1,0 +1,567 @@
+/* ============================================================
+    retro-cute.css  —  Reusable pastel retro theme
+    Import this in any EJS layout or page:
+    <link rel="stylesheet" href="/retro-cute.css" />
+   ============================================================ */
+
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=VT323&display=swap');
+@import "tailwindcss";
+/* ── Design tokens ── */
+:root {
+  /* Pink family */
+  --rc-pink:         #fce4f0;
+  --rc-pink-mid:     #f5c4e0;
+  --rc-pink-border:  #e8b4d0;
+  --rc-pink-deep:    #c0508a;
+  --rc-pink-text:    #7a2055;
+
+  /* Blue family */
+  --rc-blue:         #deeeff;
+  --rc-blue-mid:     #a8d4f5;
+  --rc-blue-border:  #80bce0;
+  --rc-blue-text:    #0a3060;
+
+  /* Yellow family */
+  --rc-yellow:       #fef9c3;
+  --rc-yellow-border:#e0c840;
+  --rc-yellow-text:  #704800;
+
+  /* Green family */
+  --rc-green:        #d8f5e4;
+  --rc-green-border: #60c888;
+  --rc-green-text:   #1a5230;
+
+  /* Neutrals */
+  --rc-cream:        #fff9f0;
+  --rc-muted:        #c080a0;
+
+  /* Shape */
+  --rc-radius-sm:    8px;
+  --rc-radius-win:   14px;
+  --rc-radius-pill:  999px;
+
+  /* Shadows  (offset style — retro feel) */
+  --rc-shadow-pink:  4px 4px 0 var(--rc-pink-border);
+  --rc-shadow-blue:  4px 4px 0 var(--rc-blue-border);
+  --rc-shadow-sm:    3px 3px 0 var(--rc-pink-border);
+
+  /* Typography */
+  --rc-font-body:    'Space Grotesk', sans-serif;
+  --rc-font-retro:   'VT323', monospace;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Base body ── */
+body {
+  font-family: var(--rc-font-body);
+  background-color: var(--rc-pink);
+  background-image:
+    linear-gradient(rgba(255,255,255,0.45) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.45) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--rc-pink-text);
+  min-height: 100vh;
+}
+
+/* ================================================================
+   LAYOUT HELPERS
+   ================================================================ */
+
+.rc-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  min-height: 100vh;
+}
+
+/* ================================================================
+   WINDOW  —  retro OS-style card
+   Usage:
+     <div class="rc-window">
+       <div class="rc-window-bar">
+         <span class="rc-dot rc-dot--red"></span>
+         <span class="rc-dot rc-dot--yellow"></span>
+         <span class="rc-dot rc-dot--green"></span>
+         <span class="rc-window-title">♡ my window</span>
+       </div>
+       <div class="rc-window-body"> … </div>
+     </div>
+   ================================================================ */
+
+.rc-window {
+  background: var(--rc-cream);
+  border: 2px solid var(--rc-pink-border);
+  border-radius: var(--rc-radius-win);
+  box-shadow: var(--rc-shadow-pink);
+  overflow: hidden;
+  width: 100%;
+}
+
+.rc-window-bar {
+  background: var(--rc-pink-mid);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 2px solid var(--rc-pink-border);
+}
+
+.rc-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  display: inline-block;
+}
+.rc-dot--red    { background: #f87171; }
+.rc-dot--yellow { background: #fbbf24; }
+.rc-dot--green  { background: #34d399; }
+
+.rc-window-title {
+  font-family: var(--rc-font-retro);
+  font-size: 17px;
+  color: var(--rc-pink-text);
+  margin-left: 6px;
+  letter-spacing: 1px;
+}
+
+.rc-window-body {
+  padding: 2rem 1.75rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* ================================================================
+   AVATAR
+   ================================================================ */
+
+.rc-avatar-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.rc-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--rc-pink-border);
+  box-shadow: var(--rc-shadow-sm);
+  background: var(--rc-pink-mid);
+  display: block;
+}
+
+.rc-avatar-fallback {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--rc-pink-mid);
+  border: 3px solid var(--rc-pink-border);
+  box-shadow: var(--rc-shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
+.rc-avatar-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 22px;
+  height: 22px;
+  background: var(--rc-yellow);
+  border: 2px solid var(--rc-yellow-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+/* ================================================================
+   TYPOGRAPHY
+   ================================================================ */
+
+.rc-title {
+  font-family: var(--rc-font-retro);
+  font-size: 2rem;
+  color: var(--rc-pink-text);
+  letter-spacing: 2px;
+  text-align: center;
+  line-height: 1;
+  padding-bottom: 1rem;
+}
+
+.rc-subtitle {
+  font-size: 13px;
+  color: var(--rc-muted);
+  text-align: center;
+}
+
+.rc-label {
+  font-family: var(--rc-font-retro);
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--rc-pink-deep);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.rc-sparkle {
+  font-size: 13px;
+  color: var(--rc-pink-border);
+  letter-spacing: 6px;
+  text-align: center;
+}
+
+/* ================================================================
+   FORM ELEMENTS
+   ================================================================ */
+
+.rc-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.rc-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.rc-input {
+  width: 100%;
+  background: white;
+  border: 2px solid var(--rc-pink-border);
+  border-radius: var(--rc-radius-sm);
+  padding: 10px 44px 10px 14px;
+  font-size: 14px;
+  font-family: var(--rc-font-body);
+  color: var(--rc-pink-text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rc-input:focus {
+  border-color: var(--rc-pink-deep);
+  box-shadow: 0 0 0 3px rgba(192, 80, 138, 0.15);
+}
+
+.rc-input::placeholder { color: #d0a0c0; }
+
+/* No right-padding needed when no icon inside */
+.rc-input--bare { padding-right: 14px; }
+
+/* Eye toggle button inside password field */
+.rc-eye-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--rc-muted);
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  transition: color 0.15s;
+}
+.rc-eye-btn:hover { color: var(--rc-pink-deep); }
+
+/* Checkbox */
+.rc-check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--rc-muted);
+}
+.rc-check-row input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--rc-pink-deep);
+  cursor: pointer;
+}
+.rc-check-row label {
+  font-family: var(--rc-font-body);
+  font-size: 13px;
+  color: var(--rc-muted);
+  letter-spacing: 0;
+  cursor: pointer;
+}
+
+/* ================================================================
+   BUTTONS
+   ================================================================ */
+
+/* Base */
+.rc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--rc-font-retro);
+  font-size: 20px;
+  letter-spacing: 2px;
+  border: 2px solid;
+  border-radius: var(--rc-radius-pill);
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-decoration: none;
+}
+
+.rc-btn:hover  { transform: translate(-1px, -1px); }
+.rc-btn:active { transform: translate(2px, 2px); }
+
+/* Pink (primary) */
+.rc-btn--pink {
+  background: var(--rc-pink-mid);
+  border-color: var(--rc-pink-border);
+  color: var(--rc-pink-text);
+  box-shadow: 3px 3px 0 var(--rc-pink-border);
+}
+.rc-btn--pink:hover  { box-shadow: 4px 4px 0 var(--rc-pink-border); }
+.rc-btn--pink:active { box-shadow: 1px 1px 0 var(--rc-pink-border); }
+
+/* Blue */
+.rc-btn--blue {
+  background: var(--rc-blue-mid);
+  border-color: var(--rc-blue-border);
+  color: var(--rc-blue-text);
+  box-shadow: 3px 3px 0 var(--rc-blue-border);
+}
+.rc-btn--blue:hover  { box-shadow: 4px 4px 0 var(--rc-blue-border); }
+.rc-btn--blue:active { box-shadow: 1px 1px 0 var(--rc-blue-border); }
+
+/* Yellow */
+.rc-btn--yellow {
+  background: var(--rc-yellow);
+  border-color: var(--rc-yellow-border);
+  color: var(--rc-yellow-text);
+  box-shadow: 3px 3px 0 var(--rc-yellow-border);
+}
+.rc-btn--yellow:hover  { box-shadow: 4px 4px 0 var(--rc-yellow-border); }
+.rc-btn--yellow:active { box-shadow: 1px 1px 0 var(--rc-yellow-border); }
+
+/* Ghost */
+.rc-btn--ghost {
+  background: transparent;
+  border-color: var(--rc-pink-border);
+  color: var(--rc-pink-deep);
+  box-shadow: none;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  font-family: var(--rc-font-body);
+  font-weight: 600;
+}
+
+/* Full width */
+.rc-btn--full { width: 100%; }
+
+/* Small size */
+.rc-btn--sm {
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 6px 16px;
+}
+
+/* ================================================================
+   BADGES
+   ================================================================ */
+
+.rc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--rc-radius-pill);
+  font-size: 11px;
+  font-weight: 700;
+  border: 1.5px solid;
+  font-family: var(--rc-font-body);
+}
+
+.rc-badge--pink   { background: var(--rc-pink);   border-color: var(--rc-pink-border);  color: var(--rc-pink-text); }
+.rc-badge--blue   { background: var(--rc-blue);   border-color: var(--rc-blue-border);  color: var(--rc-blue-text); }
+.rc-badge--green  { background: var(--rc-green);  border-color: var(--rc-green-border); color: var(--rc-green-text); }
+.rc-badge--yellow { background: var(--rc-yellow); border-color: var(--rc-yellow-border);color: var(--rc-yellow-text); }
+
+/* ================================================================
+   CARDS
+   ================================================================ */
+
+.rc-card {
+  border-radius: 16px;
+  border: 2px solid;
+  padding: 14px;
+  font-size: 13px;
+}
+
+.rc-card--pink   { background: var(--rc-pink);   border-color: var(--rc-pink-border);  color: var(--rc-pink-text); }
+.rc-card--blue   { background: var(--rc-blue);   border-color: var(--rc-blue-border);  color: var(--rc-blue-text); }
+.rc-card--green  { background: var(--rc-green);  border-color: var(--rc-green-border); color: var(--rc-green-text); }
+.rc-card--yellow { background: var(--rc-yellow); border-color: var(--rc-yellow-border);color: var(--rc-yellow-text); }
+.rc-card--cream  { background: var(--rc-cream);  border-color: var(--rc-pink-border);  color: var(--rc-pink-text); }
+
+/* ================================================================
+   ALERTS / SYSTEM MESSAGES
+   ================================================================ */
+
+.rc-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: var(--rc-radius-sm);
+  padding: 10px 12px;
+  font-size: 12px;
+  border: 2px solid;
+  width: 100%;
+}
+
+.rc-alert--error {
+  background: #fff0f4;
+  border-color: #f0b0c0;
+  color: #901840;
+}
+
+.rc-alert--success {
+  background: var(--rc-green);
+  border-color: var(--rc-green-border);
+  color: var(--rc-green-text);
+}
+
+.rc-alert--info {
+  background: var(--rc-blue);
+  border-color: var(--rc-blue-border);
+  color: var(--rc-blue-text);
+}
+
+/* ================================================================
+   DIVIDER
+   ================================================================ */
+
+.rc-divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--rc-muted);
+  font-family: var(--rc-font-retro);
+  letter-spacing: 1px;
+}
+.rc-divider::before,
+.rc-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rc-pink-border);
+}
+
+/* ================================================================
+   LINKS ROW  (e.g. forgot password / register)
+   ================================================================ */
+
+.rc-links-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 12px;
+}
+.rc-links-row a {
+  color: var(--rc-pink-deep);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--rc-pink-border);
+  transition: color 0.15s;
+}
+.rc-links-row a:hover { color: var(--rc-pink-text); }
+
+/* ================================================================
+   FLOATING DECORATIONS
+   ================================================================ */
+
+.rc-deco {
+  position: fixed;
+  pointer-events: none;
+  font-size: 1.4rem;
+  opacity: 0.55;
+  animation: rc-float 6s ease-in-out infinite;
+}
+
+@keyframes rc-float {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50%       { transform: translateY(-10px) rotate(4deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-deco { animation: none; }
+}
+
+/* ================================================================
+   PROGRESS BAR
+   ================================================================ */
+
+.rc-progress {
+  background: var(--rc-green-border);
+  border-radius: var(--rc-radius-pill);
+  height: 8px;
+  overflow: hidden;
+}
+.rc-progress-bar {
+  background: #34d399;
+  height: 100%;
+  border-radius: var(--rc-radius-pill);
+  transition: width 0.3s ease;
+}
+
+/* ================================================================
+   CHAT BUBBLES
+   ================================================================ */
+
+.rc-bubble {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 16px;
+  border: 2px solid;
+  font-size: 13px;
+  max-width: 240px;
+}
+
+.rc-bubble--out {
+  background: var(--rc-pink-mid);
+  border-color: #e090c0;
+  color: #601840;
+  border-bottom-right-radius: 4px;
+}
+
+.rc-bubble--in {
+  background: var(--rc-blue);
+  border-color: var(--rc-blue-border);
+  color: var(--rc-blue-text);
+  border-bottom-left-radius: 4px;
+}
+
+/* ================================================================
+   RESPONSIVE UTILITIES
+   ================================================================ */
+
+@media (max-width: 480px) {
+  .rc-window-body { padding: 1.5rem 1.25rem 1.25rem; }
+
+  .rc-avatar,
+  .rc-avatar-wrap,
+  .rc-avatar-fallback { width: 80px; height: 80px; }
+
+  .rc-avatar-fallback { font-size: 2rem; }
+  .rc-title { font-size: 1.7rem; }
+}

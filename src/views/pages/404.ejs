@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title || 'Error 404 ✦' %></title>
+
+    <%# ── Theme ── %>
+    <link rel="stylesheet" href="/retro-cute.css" />
+
+    <%# ── Page-specific styles ── %>
+    <style>
+        /* ── Main layout: two columns on desktop, stack on mobile ── */
+        .error-card { max-width: 780px; }
+
+        .error-body {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 2.5rem;
+        padding: 2.5rem 2rem;
+        }
+
+        /* ── Left: text side ── */
+        .error-text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        }
+
+        .error-number {
+        font-family: var(--rc-font-retro);
+        font-size: clamp(5rem, 14vw, 9rem);
+        color: var(--rc-pink-text);
+        letter-spacing: 6px;
+        line-height: 1;
+        /* cute offset shadow */
+        text-shadow:
+            4px 4px 0 var(--rc-pink-border),
+            8px 8px 0 rgba(232,180,208,0.35);
+        }
+
+        .error-tag {
+        font-family: var(--rc-font-retro);
+        font-size: 1.4rem;
+        letter-spacing: 3px;
+        color: var(--rc-pink-deep);
+        }
+
+        .error-desc {
+        font-size: 14px;
+        color: var(--rc-muted);
+        line-height: 1.6;
+        max-width: 280px;
+        }
+
+        .error-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+        }
+
+        /* ── Right: image circle ── */
+        .error-image-wrap {
+        flex-shrink: 0;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        border: 3px solid var(--rc-pink-border);
+        box-shadow: 6px 6px 0 var(--rc-pink-border);
+        background: var(--rc-pink);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        }
+
+        /* When an actual image is passed */
+        .error-image-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        }
+
+        /* Fallback placeholder */
+        .error-image-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        color: var(--rc-pink-border);
+        font-family: var(--rc-font-retro);
+        font-size: 1rem;
+        letter-spacing: 2px;
+        text-align: center;
+        padding: 1rem;
+        user-select: none;
+        }
+        .error-image-placeholder span {
+        font-size: 4rem;
+        line-height: 1;
+        animation: rc-float 4s ease-in-out infinite;
+        }
+
+        /* ── Decorative stars around the circle ── */
+        .circle-deco {
+        position: absolute;
+        pointer-events: none;
+        font-size: 1rem;
+        color: var(--rc-pink-deep);
+        opacity: 0.7;
+        animation: rc-float 5s ease-in-out infinite;
+        }
+
+        /* ── Bottom bar inside window ── */
+        .error-footer {
+        background: var(--rc-pink);
+        border-top: 2px solid var(--rc-pink-border);
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--rc-muted);
+        font-family: var(--rc-font-retro);
+        letter-spacing: 1px;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+        .error-body {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 2rem 1.25rem;
+            gap: 1.75rem;
+        }
+        /* image above on mobile */
+        .error-image-wrap { order: -1; width: 160px; height: 160px; }
+        .error-text { align-items: center; }
+        .error-desc { max-width: 100%; }
+        .error-actions { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <%# ── Floating decorations ── %>
+    <span class="rc-deco" style="top:7%;left:5%;animation-delay:0s"       aria-hidden="true">✦</span>
+    <span class="rc-deco" style="top:14%;right:7%;animation-delay:1.4s"   aria-hidden="true">♡</span>
+    <span class="rc-deco" style="bottom:18%;left:8%;animation-delay:.7s"  aria-hidden="true">★</span>
+    <span class="rc-deco" style="bottom:10%;right:6%;animation-delay:2s"  aria-hidden="true">✿</span>
+    <span class="rc-deco" style="top:50%;left:2%;animation-delay:.3s"     aria-hidden="true">◇</span>
+    <span class="rc-deco" style="top:60%;right:2%;animation-delay:1.7s"   aria-hidden="true">✦</span>
+
+    <main class="rc-center">
+
+        <%# ── Window card ── %>
+        <div class="rc-window error-card">
+
+        <%# Title bar %>
+        <div class="rc-window-bar" aria-hidden="true">
+            <span class="rc-dot rc-dot--red"></span>
+            <span class="rc-dot rc-dot--yellow"></span>
+            <span class="rc-dot rc-dot--green"></span>
+            <span class="rc-window-title">✦ Error de Sistema</span>
+        </div>
+
+        <%# Content row %>
+        <div class="error-body">
+
+            <%# Left — text %>
+            <div class="error-text">
+            <p class="error-number" aria-label="Error 404">404</p>
+            <p class="error-tag">PÁGINA NO ENCONTRADA ✦</p>
+            <p class="error-desc">
+                <%= typeof message !== 'undefined' && message
+                ? message
+                : "Bolillo pensaba que esta página existia... Seguro se la comio (Besos a mi vida! ♡) " %>
+            </p>
+
+            <%# Badges %>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <span class="rc-badge rc-badge--pink">✕ No encontrado</span>
+                <span class="rc-badge rc-badge--yellow">⚠ Error 404</span>
+            </div>
+
+            <%# Action buttons %>
+            <div class="error-actions">
+                <a href="<%= typeof homeUrl !== 'undefined' ? homeUrl : '/' %>"
+                class="rc-btn rc-btn--pink rc-btn--sm">
+                ♡ Regresar al login
+                </a>
+                <button onclick="history.back()"
+                        class="rc-btn rc-btn--ghost rc-btn--sm">
+                ← Volver
+                </button>
+            </div>
+            </div>
+
+            <%# Right — image circle %>
+            <div class="error-image-wrap" role="img" aria-label="<%= typeof imageAlt !== 'undefined' ? imageAlt : '404 illustration' %>">
+
+            <% if (typeof imageUrl !== 'undefined' && imageUrl) { %>
+                <img src="<%= imageUrl %>" alt="<%= typeof imageAlt !== 'undefined' ? imageAlt : '404 illustration' %>" />
+            <% } else { %>
+                <div class="error-image-placeholder" aria-hidden="true">
+                <span>✿</span>
+                <p>your image<br/>here</p>
+                </div>
+            <% } %>
+
+            <%# Tiny stars orbiting the circle (purely decorative) %>
+            <span class="circle-deco" style="top:-14px;left:50%;animation-delay:.2s">✦</span>
+            <span class="circle-deco" style="bottom:-14px;left:50%;animation-delay:1s">♡</span>
+            <span class="circle-deco" style="left:-14px;top:50%;animation-delay:.6s">★</span>
+            <span class="circle-deco" style="right:-14px;top:50%;animation-delay:1.4s">✦</span>
+
+            </div>
+
+        </div><%# /error-body %>
+
+        <%# Footer bar %>
+        <div class="error-footer" aria-hidden="true">
+            <span>✦ ♡ ✦ ♡ ✦</span>
+            <span>ESTATUS: 404 NO ENCONTRADO</span>
+            <span>✦ ♡ ✦ ♡ ✦</span>
+        </div>
+
+        </div><%# /rc-window %>
+
+    </main>
+
+</body>
+</html>
