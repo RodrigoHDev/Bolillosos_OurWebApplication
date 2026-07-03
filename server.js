@@ -66,6 +66,9 @@ const csrf = require('csurf');
 const csrfProtection = csrf({ session: true });
 app.use(csrfProtection);
 
+// server.js
+app.set('trust proxy', 1); // necesario en producción detrás de Render
+
 //Uso de Auth middleware that redirects to login if no auth is given
 const isAuth = require('./src/utils/isAuth');
 
