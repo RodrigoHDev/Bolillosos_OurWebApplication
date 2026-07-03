@@ -1,0 +1,117 @@
+<main class="rc-center">
+    <div class="rc-window date-window">
+        <div class="rc-window-bar">
+            <span class="rc-dot rc-dot--red"></span>
+            <span class="rc-dot rc-dot--yellow"></span>
+            <span class="rc-dot rc-dot--green"></span>
+            <span class="rc-window-title">✦ Fecha y Hora</span>
+        </div>
+
+        <div class="date-body">
+            <div class="hero-title">
+                <h1 class="hero-greeting" style="font-size:2.6rem;">Fecha y Hora</h1>
+            </div>
+
+            <p class="rc-card rc-card--pink">
+            Momento de elegir cuando será la cita amor de mi vida.
+            Elige un día o un rango de días para organizarnos según tú decidas mi cielito.</p>
+
+            <!-- ── Calendario ── -->
+            <div class="rc-calendar" data-date-picker>
+                <div class="calendar-header">
+                    <button type="button" class="calendar-nav" data-calendar-nav="prev" aria-label="Mes anterior">‹</button>
+                    <span class="calendar-label" data-calendar-label></span>
+                    <button type="button" class="calendar-nav" data-calendar-nav="next" aria-label="Mes siguiente">›</button>
+                </div>
+
+                <div class="calendar-grid" data-calendar-month></div>
+
+                <div class="calendar-legend">
+                    <span class="legend-item"><span class="legend-dot legend-dot--busy1"></span> 1 cita</span>
+                    <span class="legend-item"><span class="legend-dot legend-dot--busy2"></span> 2 citas</span>
+                    <span class="legend-item"><span class="legend-dot legend-dot--busy3"></span> 3+ citas</span>
+                </div>
+            </div>
+
+            <!-- ── Resumen de selección ── -->
+            <div class="selection-summary" id="selectionSummary" style="display:none;">
+                <span id="selectionText"></span>
+            </div>
+
+            <form id="dateForm" action="/date/date" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <input type="hidden" name="activityId" value="<%= activityId %>">
+                <input type="hidden" name="startDate" id="formStartDate" value="">
+                <input type="hidden" name="endDate" id="formEndDate" value="">
+
+                <div class="question">
+                    <button type="submit" id="btnFinish" class="rc-btn rc-btn--pink rainbow" disabled style="width:220px;">¡Finalizar!</button>
+                </div>
+            </form>
+
+            
+            <div>
+                <ul class="rc-steps">
+                    <li class="rc-step <%= currentStep >= 1 ? 'rc-step--active' : '' %>">Invitación</li>
+                    <li class="rc-step <%= currentStep >= 2 ? 'rc-step--active' : '' %>">Plan</li>
+                    <li class="rc-step <%= currentStep >= 3 ? 'rc-step--active' : '' %>">Fecha</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<!-- ── Modal de horas (solo para día único) ── -->
+<div id="hourModal" class="rc-modal">
+    <div class="modal-window hour-modal">
+        <div class="rc-window-bar">
+            <span class="rc-dot rc-dot--red"></span>
+            <span class="rc-dot rc-dot--yellow"></span>
+            <span class="rc-dot rc-dot--green"></span>
+            <span class="rc-window-title">¿A qué hora?</span>
+            <button class="modal-close-x" id="closeHourModal" aria-label="Cerrar">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <h2 class="rc-title" style="font-size:1.5rem;">Elige la hora</h2>
+            <p class="rc-subtitle" id="hourModalDate"></p>
+
+            <div class="hour-grid" id="hourGrid"></div>
+
+            <button id="btnConfirmHour" class="rc-btn rc-btn--pink rainbow" disabled style="width:220px;">Confirmar hora</button>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal" class="rc-modal">
+    <div class="modal-window">
+        <div class="rc-window-bar">
+            <span class="rc-dot rc-dot--red"></span>
+            <span class="rc-dot rc-dot--yellow"></span>
+            <span class="rc-dot rc-dot--green"></span>
+            <span class="rc-window-title">✦ Confirmado</span>
+        </div>
+
+        <div class="modal-body">
+            <h2 class="rc-title">Confirmado Mi Vida Hermosa</h2>
+            <p class="rc-card rc-card--pink" style="text-align:center;">
+                La cita ha quedado registrada y un correo ha sido enviado a ambos.
+            </p>
+
+            <div class="modal-image">
+                <img src="/images/bollito_feliz.jpg">
+            </div>
+
+            <p class="rc-title" style="font-size:1.6rem;">Te Amoooooo!</p>
+
+            <a href="/date/accept" class="rc-btn rc-btn--pink rainbow" style="width:220px; text-decoration:none;">Continuar ♡</a>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    window.existingDates = <%- JSON.stringify(dates) %>;
+</script>
+<script src="/js/date-picker.js"></script>

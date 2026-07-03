@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title || 'Bolillosos ✦' %></title>
+
+  <%# ── Theme ── %>
+  <link rel="stylesheet" href="/retro-cute.css" />
+
+</head>
+<body>
+
+  <%# ── Floating decorations (global, every page) ── %>
+  <span class="rc-deco" style="top:8%;left:6%;animation-delay:0s"       aria-hidden="true">✦</span>
+  <span class="rc-deco" style="top:15%;right:8%;animation-delay:1.2s"   aria-hidden="true">♡</span>
+  <span class="rc-deco" style="bottom:20%;left:10%;animation-delay:.6s" aria-hidden="true">★</span>
+  <span class="rc-deco" style="bottom:12%;right:7%;animation-delay:1.8s" aria-hidden="true">✿</span>
+  <span class="rc-deco" style="top:45%;left:3%;animation-delay:.3s"     aria-hidden="true">◇</span>
+  <span class="rc-deco" style="top:55%;right:3%;animation-delay:2.1s"   aria-hidden="true">✦</span>
+
+  <%# ── Notification toast ──
+       Reads `success` / `error` from res.locals, set by the
+       flash middleware (req.session.success / req.session.error).
+       Auto-dismisses after a few seconds via the script below. ── %>
+       
+  <% if ((typeof success !== 'undefined' && success) || (typeof error !== 'undefined' && error)) { %>
+    <div
+      id="rc-toast"
+      class="rc-toast <%= (typeof error !== 'undefined' && error) ? 'rc-toast--error' : 'rc-toast--success' %>"
+      role="status"
+      aria-live="polite"
+    >
+      <span class="rc-toast-icon" aria-hidden="true">
+        <%= (typeof error !== 'undefined' && error) ? '✕' : '✓' %>
+      </span>
+      <span class="rc-toast-text">
+        <%= (typeof error !== 'undefined' && error) ? error : success %>
+      </span>
+      <button type="button" class="rc-toast-close" id="rc-toast-close" aria-label="Cerrar notificación">×</button>
+    </div>
+  <% } %>
+
+  <%# ── Page content ── %>
+  <%- body %>
+
+  <%# ── Toast auto-dismiss script (only runs if a toast exists) ── %>
+  <% if ((typeof success !== 'undefined' && success) || (typeof error !== 'undefined' && error)) { %>
+    <script>
+      (function () {
+        const toast = document.getElementById('rc-toast');
+        const closeBtn = document.getElementById('rc-toast-close');
+        if (!toast) return;
+
+        const dismiss = () => {
+          toast.classList.add('rc-toast--hide');
+          setTimeout(() => toast.remove(), 300);
+        };
+
+        const timer = setTimeout(dismiss, 4000);
+        closeBtn.addEventListener('click', () => {
+          clearTimeout(timer);
+          dismiss();
+        });
+      })();
+    </script>
+  <% } %>
+
+</body>
+</html>

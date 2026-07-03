@@ -1,0 +1,106 @@
+<main class="rc-center">
+    <div class="rc-window date-window">
+            <div class="rc-window-bar">
+                <span class="rc-dot rc-dot--red"></span>
+                <span class="rc-dot rc-dot--yellow"></span>
+                <span class="rc-dot rc-dot--green"></span>
+                <span class="rc-window-title">✦ Cita</span>
+            </div>
+
+        <div class="date-body">
+
+            <div class="hero-title">
+                <h1 class="hero-greeting"> Hola <span id="salutationText" class="animated-salutation">Hermosa</span> ♡</h1>
+            </div>
+
+            <p class="rc-card rc-card--yellow" style="margin-bottom: -20px;">
+            Este es un regalito que te quiero dar por nuestros <strong>9 meses juntos</strong> cariño</p>
+
+            <p class="rc-card rc-card--pink" style="margin-bottom: -20px;">
+            Eres lo mejor que me ha pasado. Eres amor, eres color, eres luz en todos los sentidos. 
+            Por ti cariño haria lo que sea, incluyendo ser mejor para ti y para mi cada dia. 
+            No se que hice para poder compartir mi vida contigo aqui y ahora, pero creeme que seguire aqui mejorando y disfrutando siempre que tu me quieras ahi
+            </p>
+
+            <div class="rc-card rc-card--green center">
+                <p style="padding-bottom: 5px;">Me encantan</p>
+
+                <div style="display:flex; gap:6px; flex-wrap:wrap; padding: 5px 0px">
+                    <span class="rc-badge rc-badge--pink">Tus ojos</span>
+                    <span class="rc-badge rc-badge--yellow">Tu sonrisa</span>
+                    <span class="rc-badge rc-badge--blue">Tu risa</span>
+                    <span class="rc-badge rc-badge--pink">Tu personalidad</span>
+                    <span class="rc-badge rc-badge--yellow">Tu cuerpo</span>
+                </div>
+
+                <div style="display:flex; gap:6px; flex-wrap:wrap; padding: 5px 0px">
+                    <span class="rc-badge rc-badge--pink">Quien eres hoy</span>
+                    <span class="rc-badge rc-badge--yellow">Quien seras mañana</span>
+                    <span class="rc-badge rc-badge--blue">Siempre</span>
+                </div>                
+            </div>
+
+            <div class="gallery-card">
+                <div class="carousel-viewport" id="carouselViewport">
+                    <div class="carousel-track" id="carouselTrack">
+                        <% images.forEach(image=>{ %>
+                        <div class="carousel-slide">
+                            <img src="<%= image %>">
+                        </div>
+                        <% }) %>
+                    </div>
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+
+            <p class="rc-card rc-card--blue">
+            Eres el amor de mi vida,
+            mis colores,
+            mi alegría,
+            por eso quiero dedicarte esta bonita invitación.</p>
+
+            <div class="question">
+                <h2>¿Te gustaría tener una cita conmigo?</h2>
+                <div class="date-buttons">
+                    <button
+                    id="btnYes"
+                    class="rc-btn rc-btn--pink rainbow" style="width: 150px;">♡ Sí ♡</button>
+
+                    <button
+                    id="btnNo"
+                    class="rc-btn rc-btn--pink" style="width: 150px;">No</button>
+                </div>
+            </div>
+
+            <div>
+                <ul class="rc-steps">
+                    <li class="rc-step <%= currentStep >= 1 ? 'rc-step--active' : '' %>">Invitación</li>
+                    <li class="rc-step <%= currentStep >= 2 ? 'rc-step--active' : '' %>">Plan</li>
+                    <li class="rc-step <%= currentStep >= 3 ? 'rc-step--active' : '' %>">Fecha</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="yesModal" class="rc-modal">
+    <div class="modal-window">
+
+        <div class="rc-window-bar">
+            <span class="rc-dot rc-dot--red"></span>
+            <span class="rc-dot rc-dot--yellow"></span>
+            <span class="rc-dot rc-dot--green"></span>
+            <span class="rc-window-title">Yeeeeeyyyyy</span>
+        </div>
+
+        <div class="modal-body">
+            <h2 class="rc-title">Yupiiiiiiiii!!!!</h2>
+            <div class="modal-image">
+                <img src="/images/cat-kitty.gif" style="border-radius: 10px;">
+            </div>
+            <button class="rc-btn rc-btn--pink"id="closeModal" onclick="window.location.href='/date/category'">Continuar ♡</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/dates.js"></script>

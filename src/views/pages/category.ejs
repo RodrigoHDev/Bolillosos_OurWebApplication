@@ -1,0 +1,120 @@
+<main class="rc-center">
+    <div class="rc-window date-window">
+        <div class="rc-window-bar">
+            <span class="rc-dot rc-dot--red"></span>
+            <span class="rc-dot rc-dot--yellow"></span>
+            <span class="rc-dot rc-dot--green"></span>
+            <span class="rc-window-title">✦ Categoría</span>
+        </div>
+        <div class="date-body">
+            <div class="hero-title">
+                <h1 class="hero-greeting" style="font-size:2.6rem;">¿Qué haremos?</h1>
+                <p class="rc-subtitle">Categoría</p>
+            </div>
+
+            <!-- ── Instrucciones más claras ── -->
+            <div class="rc-card rc-card--pink instructions-card">
+                <p>Jala la palanca para girar la ruleta de categorías.</p>
+                <p>Tira las veces que quieras — <strong>solo avanzarás si las 3 casillas muestran la misma categoría.</strong></p>
+                <p><strong>Uhhhhh! Ludopatia! 😉</strong></p>
+            </div>
+
+            <!-- ── Slot machine ── -->
+            <div class="slot-machine">
+                <div class="slot-reels">
+                    <div class="slot-reel" id="reel1">
+                        <div class="slot-strip" id="reelStrip1"></div>
+                    </div>
+                    <div class="slot-reel" id="reel2">
+                        <div class="slot-strip" id="reelStrip2"></div>
+                    </div>
+                    <div class="slot-reel" id="reel3">
+                        <div class="slot-strip" id="reelStrip3"></div>
+                    </div>
+                </div>
+
+                <div class="lever-wrap">
+                    <button class="slot-lever" id="slotLever" aria-label="Tirar de la palanca">
+                        <span class="slot-lever-knob"></span>
+                    </button>
+                    <span class="lever-label">↓ Jala aquí ♡</span>
+                </div>
+            </div>
+
+            <!-- ── Tarjeta de resultado (oculta hasta que hay selección) ── -->
+            <div class="result-card" id="resultCard">
+                <div class="result-card-inner rainbow">
+                    <span class="result-badge">✦ ¡Categoría elegida! ✦</span>
+                    <div class="result-image-wrap">
+                        <img id="resultImage" src="" alt="">
+                    </div>
+                    <h3 id="resultName" class="result-name"></h3>
+                    <span class="result-badge">✦ WIiiiiiii ✦</span>
+                </div>
+            </div>
+
+            <input type="hidden" id="slotResult" value="">
+            <input type="hidden" id="finalCategory" name="category" value="">
+
+            <!-- ── Trampa como dropdown colapsable ── -->
+            <div class="rc-card rc-card--yellow trap-card">
+                <button type="button" class="trap-toggle" id="trapToggle" aria-expanded="false">
+                    <span class="trap-toggle-title">¡Una trampa para ti!</span>
+                    <span class="trap-toggle-icon">▾</span>
+                </button>
+
+                <div class="trap-collapse" id="trapCollapse">
+                    <p class="trap-desc">Si no quieres tirar, aquí hay una lista de las categorías, escoge una directamente y presiona el botón de continuar.</p>
+                    <div class="trap-options" id="trapOptions">
+                        <% categories.forEach(cat => { %>
+                        <button type="button" class="trap-option" data-category="<%= cat.name %>">
+                            <img src="<%= cat.image %>" alt="<%= cat.name %>">
+                            <span><%= cat.name %></span>
+                        </button>
+                        <% }) %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <button id="btnContinue" class="rc-btn rc-btn--pink rainbow" disabled style="width:220px;">Continuar ♡</button>
+            </div>
+
+            <div>
+                <ul class="rc-steps">
+                    <li class="rc-step <%= currentStep >= 1 ? 'rc-step--active' : '' %>">Invitación</li>
+                    <li class="rc-step <%= currentStep >= 2 ? 'rc-step--active' : '' %>">Plan</li>
+                    <li class="rc-step <%= currentStep >= 3 ? 'rc-step--active' : '' %>">Fecha</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="activitiesModal" class="rc-modal">
+    <div class="modal-window activities-modal">
+        <div class="rc-window-bar">
+            <span class="rc-dot rc-dot--red"></span>
+            <span class="rc-dot rc-dot--yellow"></span>
+            <span class="rc-dot rc-dot--green"></span>
+            <span class="rc-window-title">Decisiones, decisiones ...</span>
+            <button class="modal-close-x" id="closeActivitiesModal" aria-label="Cerrar">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <h2 class="rc-title" style="font-size:1.6rem;">Actividades</h2>
+            <p class="rc-subtitle">Elige la actividad que más te guste de la categoría. Si ninguna te convence, pueden volver atras a cambiar de categoria.</p>
+
+            <div class="activities-grid" id="activitiesGrid">
+                <!-- se llena dinámicamente vía JS -->
+            </div>
+
+            <button id="btnConfirmActivity" class="rc-btn rc-btn--pink rainbow" disabled style="width:220px;">Último paso ♡</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.categories = <%- JSON.stringify(categories) %>;
+</script>
+<script src="/js/category.js"></script>

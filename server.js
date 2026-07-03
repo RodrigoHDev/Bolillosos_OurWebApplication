@@ -3,13 +3,10 @@ const fs = require("fs");
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const multer = require('multer');
+const session = require('express-session');
 const compression = require("compression");
 const PORT = process.env.PORT || 3000;
-
-//Not in usage, may implement from Unitas System
-// const flashMessage = require('./src/middleware/flashMessage');
-// const viewPermission = require('./src/middleware/viewPermission');
-
+const flash   = require('./src/utils/flash');
 const renderNotFound = require('./src/utils/renderNotFound');
 
 //-------------------------------------------------------------------------
@@ -40,8 +37,8 @@ app.use(express.static(path.join(__dirname, 'src', 'public')));
 //Web application graphic engine declaration
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
+app.set('layout', 'layout');
 app.use(expressLayouts);
-app.set('layout', false); 
 
 //bodyParser declaration.
 const bodyParser = require('body-parser');
@@ -55,24 +52,19 @@ app.use(bodyParser.urlencoded({extended: false}));
 require('dotenv').config();
 
 //Usage of express-session
-const session = require('express-session');
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,        
     saveUninitialized: false, 
 }));
 
+//Usage of the flash middleware
+app.use(flash);
 
 /*Instalacion de csurf*/
 const csrf = require('csurf');
 const csrfProtection = csrf({ session: true });
 app.use(csrfProtection);
-
-//Flash Message declaration
-// app.use(flashMessage);
-
-//Usage of viewPermission
-// app.use(viewPermission);
 
 //Uso de Auth middleware that redirects to login if no auth is given
 const isAuth = require('./src/utils/isAuth');
