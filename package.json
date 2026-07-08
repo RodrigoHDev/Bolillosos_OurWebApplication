@@ -31,6 +31,7 @@
     "@supabase/supabase-js": "^2.108.2",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.3.0",
+    "cloudflared": "^0.7.1",
     "compression": "^1.8.1",
     "csurf": "^1.11.0",
     "dotenv": "^17.4.2",
