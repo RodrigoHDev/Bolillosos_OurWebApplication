@@ -1,7 +1,16 @@
-// public/js/date-picker.js
-// app.js / server.js
+/*
+Title: date-picker.js
+Author: R. Hurtado
+Date: 07/07/2026 
+Description: 
+File responsible for the render of the calendar in the date page.
+*/
+
 
 //---------------------------------------------------------------------
+//FUNCTIONS
+
+//=====================================
 // UTILIDADES DE FECHA
 
 function createDayDate(date) {
@@ -27,7 +36,7 @@ function getToday() {
     return createDayDate(new Date());
 }
 
-//---------------------------------------------------------------------
+//=====================================
 // HEATMAP DE OCUPACIÓN (a partir de window.existingDates)
 
 function buildOverlapMap(existingDates) {
@@ -48,65 +57,22 @@ function buildOverlapMap(existingDates) {
     return map;
 }
 
-const overlapMap = buildOverlapMap(window.existingDates || []);
-
-//---------------------------------------------------------------------
-// ESTADO GLOBAL
-
-const weekdayLabels = ["D", "L", "M", "M", "J", "V", "S"];
-const monthNames = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-];
-
-let baseMonth = createDayDate(new Date());
-baseMonth = new Date(baseMonth.getFullYear(), baseMonth.getMonth(), 1);
-
-let selectedStart = null; // Date | null
-let selectedEnd = null;   // Date | null
-let selectedHour = null;  // number (0-23) | null
-
-//---------------------------------------------------------------------
-// REFERENCIAS AL DOM
-
-const calendarGrid = document.querySelector("[data-calendar-month]");
-const calendarLabel = document.querySelector("[data-calendar-label]");
-const navButtons = document.querySelectorAll("[data-calendar-nav]");
-
-const selectionSummary = document.getElementById("selectionSummary");
-const selectionText = document.getElementById("selectionText");
-
-const formStartDate = document.getElementById("formStartDate");
-const formEndDate = document.getElementById("formEndDate");
-const btnFinish = document.getElementById("btnFinish");
-
-const hourModal = document.getElementById("hourModal");
-const hourModalDate = document.getElementById("hourModalDate");
-const hourGrid = document.getElementById("hourGrid");
-const closeHourModal = document.getElementById("closeHourModal");
-const btnConfirmHour = document.getElementById("btnConfirmHour");
-
-const calendarContainer = document.querySelector("[data-date-picker]");
-
-const dateForm = document.getElementById("dateForm");
-const confirmModal = document.getElementById("confirmModal");
-
-//---------------------------------------------------------------------
+//=====================================
 // RENDERIZADO DEL CALENDARIO
 
 function renderCalendar() {
     calendarLabel.textContent = `${monthNames[baseMonth.getMonth()]} ${baseMonth.getFullYear()}`;
     calendarGrid.innerHTML = "";
-
     const weekdayRow = document.createElement("div");
     weekdayRow.className = "calendar-weekdays";
+
     weekdayLabels.forEach(label => {
         const el = document.createElement("div");
         el.textContent = label;
         weekdayRow.appendChild(el);
     });
-    calendarGrid.appendChild(weekdayRow);
 
+    calendarGrid.appendChild(weekdayRow);
     const dayGrid = document.createElement("div");
     dayGrid.className = "calendar-days";
 
@@ -147,25 +113,15 @@ function renderCalendar() {
             if (selectedStart && selectedEnd && date > selectedStart && date < selectedEnd) {
                 btn.classList.add("in-range");
             }
-
             btn.addEventListener("click", () => handleDayClick(date));
         }
-
         dayGrid.appendChild(btn);
     }
 
     calendarGrid.appendChild(dayGrid);
 }
 
-navButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const direction = btn.dataset.calendarNav === "prev" ? -1 : 1;
-        baseMonth = addMonths(baseMonth, direction);
-        renderCalendar();
-    });
-});
-
-//---------------------------------------------------------------------
+//=====================================
 // LÓGICA DE SELECCIÓN (día único vs. rango)
 
 function handleDayClick(date) {
@@ -176,9 +132,11 @@ function handleDayClick(date) {
         selectedEnd = null;
         selectedHour = null;
         openHourModalFor(date);
+
     } else if (isSameDay(date, selectedStart)) {
         // Reabre el modal de horas para el mismo día (permite cambiar hora)
         openHourModalFor(date);
+        
     } else {
         // Segundo día distinto → se convierte en rango, ya no requiere hora
         if (date < selectedStart) {
@@ -195,7 +153,7 @@ function handleDayClick(date) {
     updateSummaryAndButton();
 }
 
-//---------------------------------------------------------------------
+//=====================================
 // MODAL DE HORAS
 
 function buildHourOptions() {
@@ -242,18 +200,7 @@ function closeModal() {
     hourModal.classList.remove("active");
 }
 
-closeHourModal.addEventListener("click", closeModal);
-hourModal.addEventListener("click", (e) => {
-    if (e.target === hourModal) closeModal();
-});
-
-btnConfirmHour.addEventListener("click", () => {
-    if (btnConfirmHour.disabled) return;
-    closeModal();
-    updateSummaryAndButton();
-});
-
-//---------------------------------------------------------------------
+//=====================================
 // RESUMEN + FORM OCULTO + BOTÓN FINALIZAR
 
 function buildIsoWithHour(date, hour) {
@@ -298,6 +245,72 @@ function updateSummaryAndButton() {
         btnFinish.disabled = true;
     }
 }
+
+//---------------------------------------------------------------------
+//VARIABLES DECLARATION
+const overlapMap = buildOverlapMap(window.existingDates || []);
+
+const weekdayLabels = ["D", "L", "M", "M", "J", "V", "S"];
+const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
+
+let baseMonth = createDayDate(new Date());
+baseMonth = new Date(baseMonth.getFullYear(), baseMonth.getMonth(), 1);
+
+let selectedStart = null; // Date | null
+let selectedEnd = null;   // Date | null
+let selectedHour = null;  // number (0-23) | null
+
+//=====================================
+// REFERENCIAS AL DOM
+
+const calendarGrid = document.querySelector("[data-calendar-month]");
+const calendarLabel = document.querySelector("[data-calendar-label]");
+const navButtons = document.querySelectorAll("[data-calendar-nav]");
+
+const selectionSummary = document.getElementById("selectionSummary");
+const selectionText = document.getElementById("selectionText");
+
+const formStartDate = document.getElementById("formStartDate");
+const formEndDate = document.getElementById("formEndDate");
+const btnFinish = document.getElementById("btnFinish");
+
+const hourModal = document.getElementById("hourModal");
+const hourModalDate = document.getElementById("hourModalDate");
+const hourGrid = document.getElementById("hourGrid");
+const closeHourModal = document.getElementById("closeHourModal");
+const btnConfirmHour = document.getElementById("btnConfirmHour");
+
+const calendarContainer = document.querySelector("[data-date-picker]");
+
+const dateForm = document.getElementById("dateForm");
+const confirmModal = document.getElementById("confirmModal");
+
+renderCalendar();
+
+//---------------------------------------------------------------------
+//REACTIONS TO EVENTS
+
+navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const direction = btn.dataset.calendarNav === "prev" ? -1 : 1;
+        baseMonth = addMonths(baseMonth, direction);
+        renderCalendar();
+    });
+});
+
+closeHourModal.addEventListener("click", closeModal);
+hourModal.addEventListener("click", (e) => {
+    if (e.target === hourModal) closeModal();
+});
+
+btnConfirmHour.addEventListener("click", () => {
+    if (btnConfirmHour.disabled) return;
+    closeModal();
+    updateSummaryAndButton();
+});
 
 document.addEventListener("click", (e) => {
     const path = e.composedPath();
@@ -347,8 +360,3 @@ dateForm.addEventListener("submit", async (e) => {
         selectionSummary.style.display = "block";
     }
 });
-
-//---------------------------------------------------------------------
-// INIT
-
-renderCalendar();

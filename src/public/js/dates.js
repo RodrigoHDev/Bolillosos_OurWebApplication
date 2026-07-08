@@ -1,32 +1,19 @@
-const yesButton = document.getElementById("btnYes");
-const noButton = document.getElementById("btnNo");
-const modal = document.getElementById("yesModal");
-const closeModal = document.getElementById("closeModal");
+/*
+Title: dates.js
+Author: R. Hurtado
+Date: 07/07/2026 
+Description: 
+Behavior of the date page of the Date module.
+- Movement of the names in salutation.
+- Movement of the 'no' button when cursor is close.
+- Appearance and close of the modal.
+*/
 
+//---------------------------------------------------------------------
+// FUNCTIONS
 
-
-yesButton.addEventListener("click",()=>{
-    modal.classList.add("active");
-});
-
-//-------------------------------------------------------------------
-/*Abrir y cerrar el modal*/
-
-closeModal.addEventListener("click",()=>{
-    //Add here the movement to another page.
-    modal.classList.remove("active");
-});
-
-modal.addEventListener("click",(e)=>{
-    if(e.target===modal){
-        modal.classList.remove("active");
-    }
-});
-
-
-//-------------------------------------------------------------------
-/*Movement of the No button in case the mouse gets closer or clicks it*/
-
+/*moveNoButton
+Function responsible for changing the location of the No button*/
 function moveNoButton(){
     const btnWidth = noButton.offsetWidth;
     const btnHeight = noButton.offsetHeight;
@@ -42,6 +29,67 @@ function moveNoButton(){
     noButton.style.left = x + "px";
     noButton.style.top = y + "px";
 }
+
+/*nextSalutation
+Function responsible for changing the actual salutation every few seconds*/
+function nextSalutation(){
+    salutationText.classList.remove("show");
+    salutationText.classList.add("hide");
+
+    setTimeout(()=>{
+        currentSalutation =
+            (currentSalutation + 1) % salutations.length;
+        salutationText.textContent =
+            salutations[currentSalutation];
+        salutationText.classList.remove("hide");
+        salutationText.classList.add("show");
+    },350);
+}
+
+
+//---------------------------------------------------------------------
+//VARIABLES DECLARATION
+
+const yesButton = document.getElementById("btnYes");
+const noButton = document.getElementById("btnNo");
+const modal = document.getElementById("yesModal");
+const closeModal = document.getElementById("closeModal");
+
+const salutations = [
+    "Hermosa",
+    "Preciosa",
+    "Belleza",
+    "Mi Princesa",
+    "Mi Reina",
+    "Mi Nico"
+];
+
+const salutationText = document.getElementById("salutationText");
+let currentSalutation = 0;
+
+//---------------------------------------------------------------------
+//REACTIONS TO EVENTS
+
+
+yesButton.addEventListener("click",()=>{
+    modal.classList.add("active");
+});
+
+
+/*Abrir y cerrar el modal*/
+
+closeModal.addEventListener("click",()=>{
+    modal.classList.remove("active");
+});
+
+modal.addEventListener("click",(e)=>{
+    if(e.target===modal){
+        modal.classList.remove("active");
+    }
+});
+
+
+/*Movement of the No button in case the mouse gets closer or clicks it*/
 
 document.addEventListener("mousemove",(event)=>{
     const rect=noButton.getBoundingClientRect();
@@ -69,39 +117,13 @@ noButton.addEventListener("touchstart",(e)=>{
     moveNoButton();
 });
 
-//---------------------------------------------------------
+
 /*Saluation animations*/
-
-const salutations = [
-    "Hermosa",
-    "Preciosa",
-    "Belleza",
-    "Mi Princesa",
-    "Mi Reina",
-    "Mi Nico"
-];
-
-const salutationText = document.getElementById("salutationText");
-let currentSalutation = 0;
-
-function nextSalutation(){
-    salutationText.classList.remove("show");
-    salutationText.classList.add("hide");
-
-    setTimeout(()=>{
-        currentSalutation =
-            (currentSalutation + 1) % salutations.length;
-        salutationText.textContent =
-            salutations[currentSalutation];
-        salutationText.classList.remove("hide");
-        salutationText.classList.add("show");
-    },350);
-}
 
 salutationText.classList.add("show");
 setInterval(nextSalutation,1800);
 
-//---------------------------------------------------------
+
 /*Modificacion de movimiento y creacion de carrusel en dates*/
 
 document.addEventListener("DOMContentLoaded", () => {

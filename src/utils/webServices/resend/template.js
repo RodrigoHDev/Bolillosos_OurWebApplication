@@ -1,3 +1,19 @@
+/*
+Title: template.js
+Author: R. Hurtado
+Date: 07/07/2026 
+Description: 
+Function that contains the designed template for the email
+Data used:
+data{
+  display_name
+  date
+  time
+  description
+  creator
+}
+*/
+
 function appointmentEmail(data) {
 
     return `

@@ -1,4 +1,11 @@
-// utils/icsBuilder.js
+/*
+Title: icsBuilder.js
+Author: R. Hurtado
+Date: 07/07/2026 
+Description: 
+Functions designed to create a ICS file.
+File designed to be read and stored by a calendar app or service.
+*/
 
 function pad(n) {
     return String(n).padStart(2, "0");
