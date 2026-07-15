@@ -49,7 +49,7 @@ exports.doLogin = async (request, response, next) => {
             console.log(error);
             
             request.session.error = 'Correo o contraseña inválida.';
-            return response.redirect('/');
+            return response.redirect('/auth/login');
         }
 
         
@@ -67,7 +67,7 @@ exports.doLogin = async (request, response, next) => {
         if (profileError || !profile) {
             console.log(profileError);
             request.session.error = 'No se pudo acceder a la base de datos. Contactame vida mia';
-            return response.redirect('/');
+            return response.redirect('/auth/login');
         }
 
         /*Creation of the user object into the express session.
@@ -89,7 +89,7 @@ exports.doLogin = async (request, response, next) => {
                 console.log(error);
                 request.session.error = 'No fue posible guardar la sesión.';
                 request.session.success = '';
-                return response.redirect('/');
+                return response.redirect('/auth/login');
             }
             return response.redirect('/date/accept');
         });
@@ -98,7 +98,7 @@ exports.doLogin = async (request, response, next) => {
     } catch (error) {
         console.log(error);
         request.session.error = 'No fue posible realizar el acceso.';
-        return response.redirect('/');
+        return response.redirect('/auth/login');
     }
 };
 
@@ -119,6 +119,6 @@ exports.getLogout = (request, response, next) => {
             return next(error);
         }
         await supabase.auth.signOut();
-        response.redirect("/");
+        response.redirect("/auth/login");
     });
 };

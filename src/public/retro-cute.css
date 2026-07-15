@@ -1720,3 +1720,617 @@ body {
     animation:none;
     box-shadow:3px 3px 0 var(--rc-pink-border);
 }
+
+
+/* ================================================================
+   LANDING PAGE
+   ================================================================ */
+
+/* ================================================================
+   LANDING PAGE — full rewrite
+   ================================================================ */
+
+body { overflow-x: hidden; }
+
+/* ================================================================
+   TOP NAV
+   ================================================================ */
+
+.land-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .9rem 2rem;
+  transition: background .35s, backdrop-filter .35s, box-shadow .35s;
+}
+
+.land-nav.scrolled {
+  background: rgba(252,228,240,0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 14px rgba(200,100,160,.12);
+}
+
+.land-nav-logo {
+  font-family: var(--rc-font-retro);
+  font-size: 1.6rem;
+  color: var(--rc-pink-text);
+  letter-spacing: 2px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.land-nav-actions { display: flex; gap: .75rem; align-items: center; }
+
+@media (max-width: 400px) {
+  .land-nav { padding: .75rem 1rem; }
+  .land-nav-logo { font-size: 1.1rem; letter-spacing: 1px; }
+}
+
+/* ================================================================
+   HERO  —  three-column grid inspired by ref image 1
+   Left col: title stack | Center col: big photo | Right col: two smaller photos
+   ================================================================ */
+
+.land-hero {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;   /* nav spacer | content | scroll hint */
+  padding-top: 5rem;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Subtle grid background repeats the body pattern but slightly darker */
+.land-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 2rem 2rem 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── LEFT: title block ── */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  align-items: flex-start;
+}
+
+.hero-main-title {
+  font-family: var(--rc-font-retro);
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  color: var(--rc-pink-text);
+  letter-spacing: clamp(2px, .8vw, 5px);
+  line-height: .95;
+  text-shadow:
+    3px 3px 0 var(--rc-pink-border),
+    6px 6px 0 rgba(232,180,208,.25);
+}
+
+.hero-tagline {
+  font-size: clamp(.82rem, 1.5vw, 1rem);
+  color: var(--rc-muted);
+  letter-spacing: 1px;
+  line-height: 1.55;
+  max-width: 260px;
+}
+
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+/* ── CENTER: big primary photo ── */
+.hero-center {
+  position: relative;
+}
+
+.hero-photo-main {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 3px solid var(--rc-pink-border);
+  box-shadow: 6px 6px 0 var(--rc-pink-border);
+  display: block;
+  /* slight tilt for the Y2K stacked look */
+  transform: rotate(-2deg);
+  transition: transform .3s;
+}
+.hero-photo-main:hover { transform: rotate(0deg) scale(1.01); }
+
+/* decorative label over the center photo — like ref image 1's ticker */
+.hero-photo-label {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  background: var(--rc-yellow);
+  border: 2px solid var(--rc-yellow-border);
+  border-radius: var(--rc-radius-pill);
+  padding: .35rem 1.1rem;
+  font-family: var(--rc-font-retro);
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: var(--rc-yellow-text);
+  white-space: nowrap;
+  box-shadow: 3px 3px 0 var(--rc-yellow-border);
+}
+
+/* ── RIGHT: two stacked secondary photos ── */
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hero-photo-side {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 3px solid var(--rc-pink-border);
+  box-shadow: 5px 5px 0 var(--rc-pink-border);
+  display: block;
+  transition: transform .3s;
+}
+
+.hero-photo-side:nth-child(1) {
+  transform: rotate(3deg);
+  border-color: var(--rc-blue-border);
+  box-shadow: 5px 5px 0 var(--rc-blue-border);
+}
+.hero-photo-side:nth-child(2) {
+  transform: rotate(-2.5deg);
+}
+
+.hero-photo-side:hover { transform: rotate(0deg) scale(1.02); }
+
+/* scroll hint */
+.hero-scroll-hint {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .35rem;
+  padding: 1.25rem 0 1.5rem;
+  color: var(--rc-muted);
+  font-size: .72rem;
+  letter-spacing: 2px;
+  font-family: var(--rc-font-retro);
+  animation: rc-float 2.5s ease-in-out infinite;
+}
+.hero-scroll-hint svg { opacity: .45; }
+
+/* ── HERO MOBILE ── */
+@media (max-width: 700px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    padding: 1rem 1rem .5rem;
+    gap: 1.5rem;
+  }
+
+  .hero-left { align-items: center; text-align: center; }
+  .hero-tagline { max-width: 100%; }
+
+  /* On mobile: main photo full width, side photos side-by-side below */
+  .hero-right {
+    flex-direction: row;
+    gap: .75rem;
+  }
+  .hero-photo-side {
+    aspect-ratio: 1;
+  }
+
+  .hero-main-title { font-size: clamp(3rem, 12vw, 5rem); }
+}
+
+/* ================================================================
+   SECTION WRAPPER  —  each section looks like a "page" / window
+   ================================================================ */
+
+.land-page {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem;
+}
+
+@media (min-width: 700px) {
+  .land-page { padding: 3.5rem 2rem; }
+}
+
+/* The Y2K "page" container — thick border, offset shadow, cream bg */
+.land-page-inner {
+  background: var(--rc-cream);
+  border: 2.5px solid var(--rc-pink-border);
+  border-radius: 18px;
+  box-shadow: 6px 6px 0 var(--rc-pink-border);
+  overflow: hidden;
+}
+
+/* Coloured header bar on each page — swapped per section */
+.land-page-header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .9rem 1.4rem;
+  border-bottom: 2.5px solid var(--rc-pink-border);
+}
+
+.land-page-header--pink   { background: var(--rc-pink-mid);  border-color: var(--rc-pink-border); }
+.land-page-header--blue   { background: var(--rc-blue-mid);  border-color: var(--rc-blue-border); }
+.land-page-header--yellow { background: var(--rc-yellow);    border-color: var(--rc-yellow-border);}
+.land-page-header--green  { background: var(--rc-green);     border-color: var(--rc-green-border); }
+
+.land-page-dots { display: flex; gap: 5px; }
+
+.land-page-title {
+  font-family: var(--rc-font-retro);
+  font-size: 1rem;
+  letter-spacing: 1.5px;
+  color: var(--rc-pink-text);
+  margin-left: 4px;
+}
+
+.land-page-title--blue   { color: var(--rc-blue-text); }
+.land-page-title--yellow { color: var(--rc-yellow-text); }
+.land-page-title--green  { color: var(--rc-green-text); }
+
+.land-page-body {
+  padding: 1.75rem 1.5rem 2rem;
+}
+
+.land-section-heading {
+  font-family: var(--rc-font-retro);
+  font-size: clamp(1rem, 3.5vw, 2.4rem);
+  color: var(--rc-pink-text);
+  letter-spacing: 2px;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ================================================================
+   WHAT'S NEW  —  big tiled cards like ref image 2
+   Each card: image tilted to one side, text on the other
+   ================================================================ */
+
+.whats-new-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Base card */
+.announcement-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 2.5px solid var(--rc-pink-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 5px 5px 0 var(--rc-pink-border);
+  background: white;
+  transition: transform .2s, box-shadow .2s;
+  min-height: 220px;
+}
+
+.announcement-card:hover {
+  transform: translate(-2px,-2px);
+  box-shadow: 7px 7px 0 var(--rc-pink-border);
+}
+
+/* Alternate: even cards flip image to right */
+.announcement-card:nth-child(even) {
+  grid-template-columns: 1fr 1fr;
+  direction: rtl;
+}
+.announcement-card:nth-child(even) > * { direction: ltr; }
+
+/* Image panel — fills its column, tilted via wrapper */
+.announcement-img-wrap {
+  position: relative;
+  overflow: hidden;
+  background: var(--rc-pink);
+  min-height: 200px;
+}
+
+.announcement-thumb {
+  position: absolute;
+  inset: -8px;                     /* slight oversize so tilt doesn't show gaps */
+  width: calc(100% + 16px);
+  height: calc(100% + 16px);
+  object-fit: cover;
+  transform: rotate(-3deg) scale(1.05);
+  transition: transform .35s;
+}
+
+.announcement-card:nth-child(even) .announcement-thumb {
+  transform: rotate(3deg) scale(1.05);
+}
+
+.announcement-card:hover .announcement-thumb {
+  transform: rotate(0deg) scale(1.08);
+}
+
+/* No-image fallback: color block with sparkle */
+.announcement-img-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  opacity: .35;
+  font-family: var(--rc-font-retro);
+}
+
+/* Text panel */
+.announcement-body {
+  padding: 1.5rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .6rem;
+  background: var(--rc-cream);
+}
+
+.announcement-meta {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+
+.announcement-date {
+  font-family: var(--rc-font-retro);
+  font-size: .85rem;
+  color: var(--rc-muted);
+  letter-spacing: 1px;
+}
+
+.announcement-title {
+  font-family: var(--rc-font-retro);
+  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  color: var(--rc-pink-text);
+  letter-spacing: 1px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.announcement-desc {
+  font-size: .9rem;
+  color: var(--rc-muted);
+  line-height: 1.6;
+}
+
+.whats-new-empty {
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--rc-muted);
+  font-size: 1rem;
+  font-family: var(--rc-font-retro);
+  letter-spacing: 1px;
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 580px) {
+  .announcement-card {
+    grid-template-columns: 1fr;
+    direction: ltr !important;
+  }
+  .announcement-img-wrap { min-height: 180px; }
+  .announcement-body { padding: 1.1rem 1.2rem; }
+  .announcement-card:nth-child(even) .announcement-thumb {
+    transform: rotate(-3deg) scale(1.05);
+  }
+}
+
+/* ================================================================
+   ABOUT  —  always visible, two-column layout
+   ================================================================ */
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.about-decorative {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.about-big-emoji {
+  font-size: 5rem;
+  line-height: 1;
+  animation: rc-float 4s ease-in-out infinite;
+}
+
+.about-sparkle-row {
+  font-family: var(--rc-font-retro);
+  font-size: 1.1rem;
+  color: var(--rc-blue-border);
+  letter-spacing: 6px;
+}
+
+.about-text {
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+  font-size: .95rem;
+  color: var(--rc-pink-text);
+  line-height: 1.7;
+}
+
+.about-text p strong { color: var(--rc-pink-deep); }
+
+@media (max-width: 580px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+  }
+  .about-decorative { flex-direction: row; justify-content: center; }
+  .about-big-emoji  { font-size: 3rem; }
+}
+
+/* ================================================================
+   SECTIONS GRID  —  bigger cards, full use of space
+   ================================================================ */
+
+.sections-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.section-card {
+  flex: 0 0 min(280px, 100%);  /* same min-width as before, doesn't grow or shrink */
+  position: relative;
+  border: 2.5px solid;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 5px 5px 0;
+  transition: transform .18s, box-shadow .18s;
+  min-height: 260px;
+}
+
+/* Active card uses pink palette */
+.section-card--active {
+  border-color: var(--rc-pink-border);
+  box-shadow: 5px 5px 0 var(--rc-pink-border);
+  background: var(--rc-cream);
+}
+.section-card--active:hover {
+  transform: translate(-3px,-3px);
+  box-shadow: 8px 8px 0 var(--rc-pink-border);
+}
+
+/* Locked cards rotate through blue / yellow / green */
+.section-card--locked-blue {
+  border-color: var(--rc-blue-border);
+  box-shadow: 5px 5px 0 var(--rc-blue-border);
+  background: var(--rc-blue);
+}
+.section-card--locked-yellow {
+  border-color: var(--rc-yellow-border);
+  box-shadow: 5px 5px 0 var(--rc-yellow-border);
+  background: var(--rc-yellow);
+}
+
+/* Coloured header strip */
+.section-card-strip {
+  height: 8px;
+}
+.section-card--active       .section-card-strip { background: var(--rc-pink-mid); }
+.section-card--locked-blue  .section-card-strip { background: var(--rc-blue-mid); }
+.section-card--locked-yellow .section-card-strip { background: var(--rc-yellow-border); }
+
+.section-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .85rem;
+  padding: 1.75rem 1.5rem 1.75rem;
+  text-align: center;
+}
+
+.section-card-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.1rem;
+  border: 2.5px solid;
+}
+.section-card--active .section-card-icon {
+  background: var(--rc-pink);
+  border-color: var(--rc-pink-border);
+}
+.section-card--locked-blue .section-card-icon {
+  background: var(--rc-cream);
+  border-color: var(--rc-blue-border);
+}
+.section-card--locked-yellow .section-card-icon {
+  background: var(--rc-cream);
+  border-color: var(--rc-yellow-border);
+}
+
+.section-card-title {
+  font-family: var(--rc-font-retro);
+  font-size: 1.6rem;
+  letter-spacing: 1.5px;
+  color: var(--rc-pink-text);
+}
+.section-card--locked-blue .section-card-title   { color: var(--rc-blue-text); }
+.section-card--locked-yellow .section-card-title { color: var(--rc-yellow-text); }
+
+.section-card-desc {
+  font-size: .88rem;
+  line-height: 1.6;
+  color: var(--rc-muted);
+  flex: 1;
+}
+.section-card--locked-blue .section-card-desc   { color: var(--rc-blue-text); opacity: .7; }
+.section-card--locked-yellow .section-card-desc { color: var(--rc-yellow-text); opacity: .7; }
+
+.section-card-lock-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: .8rem;
+  opacity: .5;
+}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+
+.land-footer {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  font-family: var(--rc-font-retro);
+  font-size: 1rem;
+  color: var(--rc-muted);
+  letter-spacing: 3px;
+  border-top: 2.5px solid var(--rc-pink-border);
+  background: var(--rc-cream);
+}

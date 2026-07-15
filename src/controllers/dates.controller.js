@@ -53,7 +53,7 @@ exports.getAcceptDate = (request, response, next) => {
     } catch(error){
         console.error(error);
         request.session.error = 'Las imagenes no pudieron ser cargadas. Contactame preciosa.';
-        return response.redirect('/');
+        return response.redirect('/auth/login');
     }
     //=========================
     /*Render of the dates page*/

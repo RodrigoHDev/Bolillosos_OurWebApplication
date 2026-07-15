@@ -1,7 +1,7 @@
 /*
 Title: auth.routes.js
 Author: R. Hurtado
-Date: 07/07/2026 
+Date: 07/15/2026 
 Description: 
 Routes for the Auth module.
 
@@ -16,9 +16,8 @@ const router = express.Router();
 //Not used. Stays for further development.
 const isAuth = require('../middleware/isAuth');
 
-const authController = require('../controllers/auth.controller');
+const landingController = require('../controllers/landing.controller');
 
-router.get('/login', authController.getLogin);
-router.post('/login', authController.doLogin);
+router.get('/', landingController.getLandingPage);
 
 module.exports = router;

@@ -97,9 +97,13 @@ app.use(csrfProtection);
 app.set('trust proxy', 1); 
 
 /*Routes redirection*/
+//Landing page
+const routesLanding = require('./src/routes/landing.routes');
+app.use('/', routesLanding);
+
 //Auth
 const routesAuth = require('./src/routes/auth.routes');
-app.use('/', routesAuth);
+app.use('/auth', routesAuth);
 
 //Dates
 const routesDates = require('./src/routes/dates.routes');

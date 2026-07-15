@@ -1,0 +1,267 @@
+<%# ================================================================
+    TOP NAV
+    ================================================================ %>
+<nav class="land-nav" id="landNav" aria-label="Navegación principal">
+  <a href="/" class="land-nav-logo">Bolillosos ✦</a>
+  <div class="land-nav-actions">
+    <a href="/auth/login" class="rc-btn rc-btn--pink rc-btn--sm">♡ Entrar</a>
+  </div>
+</nav>
+
+<%# ================================================================
+    HERO  —  3-column editorial grid
+    ================================================================ %>
+<section class="land-hero" aria-label="Hero">
+
+  <div class="hero-grid">
+
+    <%# ── LEFT: title block ── %>
+    <div class="hero-left">
+      <h1 class="hero-main-title">Bolillosos</h1>
+      <p class="hero-tagline">Nuestro pequeño mundo digital ✦ hecho con amor, pixel a pixel.</p>
+      <div class="hero-badges">
+        <span class="rc-badge rc-badge--pink">♡ Para nosotros</span>
+        <span class="rc-badge rc-badge--blue">✦ Siempre juntos</span>
+        <span class="rc-badge rc-badge--yellow">★ Con amor</span>
+      </div>
+      <a href="/auth/login" class="rc-btn rc-btn--pink" style="margin-top:.5rem;">
+        ♡ Entrar
+      </a>
+    </div>
+
+    <%# ── CENTER: big primary photo ── %>
+    <%# Replace src="" with your main couple photo or dog photo %>
+    <div class="hero-center">
+      <img class="hero-photo-main" src="images/landing/fiesta.jpg" alt="Foto principal" />
+      <span class="hero-photo-label">✦ BOLILLOSOS ✦</span>
+    </div>
+
+    <%# ── RIGHT: two side photos ── %>
+    <%# Replace src="" with couple photos %>
+    <div class="hero-right">
+      <img class="hero-photo-side" src="images/landing/cumple.jpg" alt="Foto 2" />
+      <img class="hero-photo-side" src="images/landing/hallowen.jpeg" alt="Foto 3" />
+    </div>
+
+  </div>
+
+  <div class="hero-scroll-hint" aria-hidden="true">
+    <span>EXPLORAR</span>
+    <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 1v14M2 11l6 6 6-6" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+</section>
+
+<%# ================================================================
+    WHAT'S NEW
+    ================================================================ %>
+<div class="land-page">
+  <div class="land-page-inner">
+
+    <div class="land-page-header land-page-header--pink">
+      <div class="land-page-dots">
+        <span class="rc-dot rc-dot--red"></span>
+        <span class="rc-dot rc-dot--yellow"></span>
+        <span class="rc-dot rc-dot--green"></span>
+      </div>
+      <span class="land-page-title">★ novedades.ejs</span>
+    </div>
+
+    <div class="land-page-body">
+      <h2 class="land-section-heading">¿Qué hay de nuevo?</h2>
+
+      <% if (typeof announcements !== 'undefined' && announcements.length > 0) { %>
+        <div class="whats-new-list">
+          <% announcements.forEach(function(a) { %>
+            <article class="announcement-card">
+
+              <%# Image panel — tilted via CSS %>
+              <div class="announcement-img-wrap">
+                <% if (a.image) { %>
+                  <img class="announcement-thumb" src="<%= a.image %>" alt="<%= a.title %>" />
+                <% } else { %>
+                  <div class="announcement-img-placeholder">✦</div>
+                <% } %>
+              </div>
+
+              <%# Text panel %>
+              <div class="announcement-body">
+                <div class="announcement-meta">
+                  <span class="announcement-date"><%= a.date %></span>
+                  <% if (a.isNew) { %>
+                    <span class="rc-badge rc-badge--pink" style="font-size:10px;padding:2px 8px;">NUEVO ✦</span>
+                  <% } %>
+                </div>
+                <p class="announcement-title"><%= a.title %></p>
+                <p class="announcement-desc"><%= a.description %></p>
+              </div>
+
+            </article>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="whats-new-empty">
+          ✦ Pronto habrá novedades por aquí ♡
+        </div>
+      <% } %>
+    </div>
+
+  </div>
+</div>
+
+<%# ================================================================
+    ABOUT  —  always visible, no toggle
+    ================================================================ %>
+<div class="land-page">
+  <div class="land-page-inner">
+
+    <div class="land-page-header land-page-header--blue">
+      <div class="land-page-dots">
+        <span class="rc-dot rc-dot--red"></span>
+        <span class="rc-dot rc-dot--yellow"></span>
+        <span class="rc-dot rc-dot--green"></span>
+      </div>
+      <span class="land-page-title land-page-title--blue">◇ sobre_nosotros.ejs</span>
+    </div>
+
+    <div class="land-page-body">
+      <h2 class="land-section-heading" style="color:var(--rc-blue-text);">
+        ¿Qué es Bolillosos?
+      </h2>
+
+      <div class="about-layout">
+
+        <div class="about-decorative">
+          <div class="about-big-emoji">🌻</div>
+          <p class="about-sparkle-row">✦ ♡ ✦ ♡ ✦</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;">
+            <span class="rc-badge rc-badge--blue">♡ Amor</span>
+            <span class="rc-badge rc-badge--pink">✦ Nosotros</span>
+            <span class="rc-badge rc-badge--green">★ Juntos</span>
+          </div>
+        </div>
+
+        <div class="about-text">
+          <%#
+            Replace the paragraphs below with your actual description.
+            Add or remove <p> tags freely.
+          %>
+          <p>
+            <strong>Bolillosos</strong> es nuestro pequeño rincón digital —
+            un espacio hecho a medida ♡
+          </p>
+          <p>
+            Aquí podremos planear citas, guardar recuerdos y compartir
+            momentos de una forma única.
+            Todo diseñado con amor, pixel a pixel.
+          </p>
+          <p>
+            Iremos añadiendo secciones poco a poco.
+            Por ahora: las <strong>citas</strong> nos esperan ✦
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<%# ================================================================
+    SECTIONS GRID
+    ================================================================ %>
+<div class="land-page">
+  <div class="land-page-inner">
+
+    <div class="land-page-header land-page-header--yellow">
+      <div class="land-page-dots">
+        <span class="rc-dot rc-dot--red"></span>
+        <span class="rc-dot rc-dot--yellow"></span>
+        <span class="rc-dot rc-dot--green"></span>
+      </div>
+      <span class="land-page-title land-page-title--yellow">♡ secciones.ejs</span>
+    </div>
+
+    <div class="land-page-body">
+      <h2 class="land-section-heading" style="color:var(--rc-yellow-text);">
+        Nuestras Secciones
+      </h2>
+
+      <div class="sections-grid">
+
+        <%# ── CITAS — active ── %>
+        <div class="section-card section-card--active">
+          <div class="section-card-strip"></div>
+          <div class="section-card-content">
+            <div class="section-card-icon">🗓️</div>
+            <p class="section-card-title">Citas</p>
+            <p class="section-card-desc">
+              Planeen y agenden sus momentos juntos de forma mágica.
+              Su primera cita los espera ✦
+            </p>
+            <a href="/auth/login" class="rc-btn rc-btn--pink" style="margin-top:auto;">
+              ♡ Entrar
+            </a>
+          </div>
+        </div>
+
+        <!-- <%# ── RECUERDOS — locked ── %>
+        <div class="section-card section-card--locked-blue" aria-disabled="true">
+          <span class="section-card-lock-badge" aria-hidden="true">🔒</span>
+          <div class="section-card-strip"></div>
+          <div class="section-card-content">
+            <div class="section-card-icon">📸</div>
+            <p class="section-card-title">Recuerdos</p>
+            <p class="section-card-desc">
+              Un álbum de sus momentos más especiales juntos.
+              Cada foto cuenta una historia ♡
+            </p>
+            <span class="rc-badge rc-badge--blue" style="margin-top:auto;">Próximamente</span>
+          </div>
+        </div>
+
+        <%# ── MENSAJES — locked ── %>
+        <div class="section-card section-card--locked-yellow" aria-disabled="true">
+          <span class="section-card-lock-badge" aria-hidden="true">🔒</span>
+          <div class="section-card-strip"></div>
+          <div class="section-card-content">
+            <div class="section-card-icon">💌</div>
+            <p class="section-card-title">Mensajes</p>
+            <p class="section-card-desc">
+              Cartitas y notas que solo ustedes pueden leer.
+              Palabras que quedan para siempre ✦
+            </p>
+            <span class="rc-badge rc-badge--yellow" style="margin-top:auto;">Próximamente</span>
+          </div>
+        </div> -->
+
+        <%# ── Add more cards here as needed ── %>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<%# ================================================================
+    FOOTER
+    ================================================================ %>
+<footer class="land-footer">
+  <p>✦ ♡ Bolillosos — hecho con amor ♡ ✦</p>
+</footer>
+
+<%# ================================================================
+    SCRIPTS
+    ================================================================ %>
+<script>
+(function () {
+  /* ── Nav: glass effect on scroll ── */
+  const nav = document.getElementById('landNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+})();
+</script>
