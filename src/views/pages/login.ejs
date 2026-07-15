@@ -50,7 +50,7 @@
       </div>
 
       <%# ── Login form ── %>
-      <form action="/" method="POST" novalidate style="width:100%;display:flex;flex-direction:column;gap:.85rem;">
+      <form action="/auth/login" method="POST" novalidate style="width:100%;display:flex;flex-direction:column;gap:.85rem;">
 
         <%# CSRF (csurf / other middleware) %>
         <% if (typeof csrfToken !== 'undefined') { %>

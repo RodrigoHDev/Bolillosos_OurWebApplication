@@ -1,120 +1,329 @@
+<style>
+/* ================================================================
+   CATEGORY PAGE — mobile fixes
+   PC styles are untouched. All mobile overrides are scoped inside
+   @media (max-width: 600px) or @media (max-width: 380px).
+   ================================================================ */
+
+/* Always: slot machine never overflows its parent */
+.slot-machine { width: 100%; box-sizing: border-box; }
+
+/* ================================================================
+   MOBILE  ≤ 600px
+   ================================================================ */
+@media (max-width: 600px) {
+
+  /* Window edge-to-edge */
+  .date-window {
+    max-width: 100% !important;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
+  }
+
+  .date-body { padding: 1.1rem 1rem; gap: 1.1rem; }
+
+  /* ── Slot machine: vertical stack ── */
+  .slot-machine {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .slot-reels {
+    flex-direction: column;
+    align-items: center;
+    gap: .6rem;
+    padding: .6rem;
+    width: 45%;
+  }
+
+  .slot-reel {
+    width: 100% !important;
+   }
+
+ /* Images inside the reel fill the square, centered crop */
+  .slot-strip img {
+    width: 100% !important;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* ── Lever → circular tap button on mobile ── */
+
+  /* Hide the original CSS lever entirely */
+  .slot-lever { display: none; }
+
+  /* Show the mobile tap button (defined in HTML below, hidden on desktop) */
+  .slot-lever-mobile {
+    display: flex !important;     /* overrides the desktop display:none */
+  }
+
+  /* Hide the lever label — the button has its own label */
+  .lever-label { display: none; }
+
+  /* The lever-wrap just centers the mobile button */
+  .lever-wrap {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+  }
+
+  /* ── Trap options: 2-col grid WITH compact images ── */
+  .trap-options {
+    grid-template-columns: repeat(2, 1fr);
+    gap: .5rem;
+  }
+
+  .trap-option {
+    padding: .5rem .4rem;
+    font-size: .78rem;
+    gap: .3rem;
+    border-radius: 10px;
+    /* Images back on, but small and square */
+  }
+
+  .trap-option img {
+    display: block !important;   /* was hidden in previous version — now show */
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 6px;
+  }
+
+  /* ── Result card ── */
+  .result-card-inner { padding: 1rem 1.25rem; gap: .5rem; }
+  .result-image-wrap { width: 100px; height: 100px; }
+
+  /* ── Steps ── */
+  .rc-step { font-size: .7rem; padding-top: 34px; }
+
+  /* ── Continue button ── */
+  #btnContinue { width: 100% !important; }
+
+  /* ── Activities modal ── */
+  .activities-modal {
+    width: 96% !important;
+    max-height: 90svh;
+    overflow-y: auto;
+  }
+  .activities-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    max-height: 55svh;
+  }
+}
+
+/* ================================================================
+   VERY SMALL  ≤ 380px
+   ================================================================ */
+@media (max-width: 380px) {
+  /* Slightly shorter reels on tiny screens */
+  .slot-reel { aspect-ratio: 16 / 6 !important; }
+
+  .trap-option img { height: 50px; }
+}
+
+/* ================================================================
+   MOBILE TAP BUTTON — hidden on desktop, shown on mobile via media query above
+   ================================================================ */
+.slot-lever-mobile {
+  display: none;               /* hidden on PC; @media above sets display:flex */
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: .4rem;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: var(--rc-pink-deep);
+  border: 3px solid var(--rc-pink-border);
+  box-shadow: 4px 4px 0 var(--rc-pink-border);
+  cursor: pointer;
+  font-family: var(--rc-font-retro);
+  font-size: .75rem;
+  letter-spacing: 1px;
+  color: white;
+  text-align: center;
+  line-height: 1.2;
+  transition: transform .1s, box-shadow .1s;
+  animation: rainbowGlow 2s linear infinite;
+}
+
+.slot-lever-mobile:hover  {
+  transform: translate(-1px,-1px);
+  box-shadow: 5px 5px 0 var(--rc-pink-border);
+}
+.slot-lever-mobile:active {
+  transform: translate(2px,2px);
+  box-shadow: 2px 2px 0 var(--rc-pink-border);
+}
+
+.slot-lever-mobile-icon { font-size: 1.4rem; line-height: 1; }
+</style>
+
 <main class="rc-center">
-    <div class="rc-window date-window">
-        <div class="rc-window-bar">
-            <span class="rc-dot rc-dot--red"></span>
-            <span class="rc-dot rc-dot--yellow"></span>
-            <span class="rc-dot rc-dot--green"></span>
-            <span class="rc-window-title">✦ Categoría</span>
-        </div>
-        <div class="date-body">
-            <div class="hero-title">
-                <h1 class="hero-greeting" style="font-size:2.6rem;">¿Qué haremos?</h1>
-                <p class="rc-subtitle">Categoría</p>
-            </div>
-
-            <!-- ── Instrucciones más claras ── -->
-            <div class="rc-card rc-card--pink instructions-card">
-                <p>Jala la palanca para girar la ruleta de categorías.</p>
-                <p>Tira las veces que quieras — <strong>solo avanzarás si las 3 casillas muestran la misma categoría.</strong></p>
-                <p><strong>Uhhhhh! Ludopatia! 😉</strong></p>
-            </div>
-
-            <!-- ── Slot machine ── -->
-            <div class="slot-machine">
-                <div class="slot-reels">
-                    <div class="slot-reel" id="reel1">
-                        <div class="slot-strip" id="reelStrip1"></div>
-                    </div>
-                    <div class="slot-reel" id="reel2">
-                        <div class="slot-strip" id="reelStrip2"></div>
-                    </div>
-                    <div class="slot-reel" id="reel3">
-                        <div class="slot-strip" id="reelStrip3"></div>
-                    </div>
-                </div>
-
-                <div class="lever-wrap">
-                    <button class="slot-lever" id="slotLever" aria-label="Tirar de la palanca">
-                        <span class="slot-lever-knob"></span>
-                    </button>
-                    <span class="lever-label">↓ Jala aquí ♡</span>
-                </div>
-            </div>
-
-            <!-- ── Tarjeta de resultado (oculta hasta que hay selección) ── -->
-            <div class="result-card" id="resultCard">
-                <div class="result-card-inner rainbow">
-                    <span class="result-badge">✦ ¡Categoría elegida! ✦</span>
-                    <div class="result-image-wrap">
-                        <img id="resultImage" src="" alt="">
-                    </div>
-                    <h3 id="resultName" class="result-name"></h3>
-                    <span class="result-badge">✦ WIiiiiiii ✦</span>
-                </div>
-            </div>
-
-            <input type="hidden" id="slotResult" value="">
-            <input type="hidden" id="finalCategory" name="category" value="">
-
-            <!-- ── Trampa como dropdown colapsable ── -->
-            <div class="rc-card rc-card--yellow trap-card">
-                <button type="button" class="trap-toggle" id="trapToggle" aria-expanded="false">
-                    <span class="trap-toggle-title">¡Una trampa para ti!</span>
-                    <span class="trap-toggle-icon">▾</span>
-                </button>
-
-                <div class="trap-collapse" id="trapCollapse">
-                    <p class="trap-desc">Si no quieres tirar, aquí hay una lista de las categorías, escoge una directamente y presiona el botón de continuar.</p>
-                    <div class="trap-options" id="trapOptions">
-                        <% categories.forEach(cat => { %>
-                        <button type="button" class="trap-option" data-category="<%= cat.name %>">
-                            <img src="<%= cat.image %>" alt="<%= cat.name %>">
-                            <span><%= cat.name %></span>
-                        </button>
-                        <% }) %>
-                    </div>
-                </div>
-            </div>
-
-            <div class="question">
-                <button id="btnContinue" class="rc-btn rc-btn--pink rainbow" disabled style="width:220px;">Continuar ♡</button>
-            </div>
-
-            <div>
-                <ul class="rc-steps">
-                    <li class="rc-step <%= currentStep >= 1 ? 'rc-step--active' : '' %>">Invitación</li>
-                    <li class="rc-step <%= currentStep >= 2 ? 'rc-step--active' : '' %>">Plan</li>
-                    <li class="rc-step <%= currentStep >= 3 ? 'rc-step--active' : '' %>">Fecha</li>
-                </ul>
-            </div>
-        </div>
+  <div class="rc-window date-window">
+    <div class="rc-window-bar">
+      <span class="rc-dot rc-dot--red"></span>
+      <span class="rc-dot rc-dot--yellow"></span>
+      <span class="rc-dot rc-dot--green"></span>
+      <span class="rc-window-title">✦ Categoría</span>
     </div>
+
+    <div class="date-body">
+
+      <div class="hero-title">
+        <h1 class="hero-greeting" style="font-size:2.6rem;">¿Qué haremos?</h1>
+        <p class="rc-subtitle">Categoría</p>
+      </div>
+
+      <%# ── Instructions ── %>
+      <div class="rc-card rc-card--pink instructions-card">
+        <p>Jala la palanca para girar la ruleta de categorías.</p>
+        <p>Tira las veces que quieras — <strong>solo avanzarás si las 3 casillas muestran la misma categoría.</strong></p>
+        <p><strong>Uhhhhh! Ludopatia! 😉</strong></p>
+      </div>
+
+      <%# ── Slot machine ── %>
+      <div class="slot-machine">
+        <div class="slot-reels">
+          <div class="slot-reel" id="reel1">
+            <div class="slot-strip" id="reelStrip1"></div>
+          </div>
+          <div class="slot-reel" id="reel2">
+            <div class="slot-strip" id="reelStrip2"></div>
+          </div>
+          <div class="slot-reel" id="reel3">
+            <div class="slot-strip" id="reelStrip3"></div>
+          </div>
+        </div>
+
+        <%# lever-wrap: contains the desktop lever + the mobile circular button %>
+        <%# Both share the same #slotLever id so category.js works without changes %>
+        <div class="lever-wrap">
+
+          <%# Desktop: original CSS lever (hidden on mobile via media query) %>
+          <button class="slot-lever" id="slotLever" aria-label="Tirar de la palanca">
+            <span class="slot-lever-knob"></span>
+          </button>
+          <span class="lever-label">↓ Jala aquí ♡</span>
+
+          <%#
+            Mobile: circular tap button.
+            It fires a click on #slotLever so category.js needs zero changes.
+            Shown only on mobile via the CSS above.
+          %>
+          <button
+            class="slot-lever-mobile"
+            aria-label="Presionar para girar"
+            onclick="document.getElementById('slotLever').click()"
+          >
+            <span class="slot-lever-mobile-icon">♡</span>
+            <span>¡Presióname!</span>
+          </button>
+
+        </div>
+      </div>
+
+      <%# ── Result card (hidden until win) ── %>
+      <div class="result-card" id="resultCard">
+        <div class="result-card-inner rainbow">
+          <span class="result-badge">✦ ¡Categoría elegida! ✦</span>
+          <div class="result-image-wrap">
+            <img id="resultImage" src="" alt="" />
+          </div>
+          <h3 id="resultName" class="result-name"></h3>
+          <span class="result-badge">✦ WIiiiiiii ✦</span>
+        </div>
+      </div>
+
+      <input type="hidden" id="slotResult"    value="" />
+      <input type="hidden" id="finalCategory" name="category" value="" />
+
+      <%# ── Trap dropdown ── %>
+      <div class="rc-card rc-card--yellow trap-card">
+        <button type="button" class="trap-toggle" id="trapToggle" aria-expanded="false">
+          <span class="trap-toggle-title">¡Una trampa para ti!</span>
+          <span class="trap-toggle-icon">▾</span>
+        </button>
+
+        <div class="trap-collapse" id="trapCollapse">
+          <p class="trap-desc">
+            Si no quieres tirar, aquí hay una lista de las categorías —
+            escoge una directamente y presiona el botón de continuar.
+          </p>
+          <div class="trap-options" id="trapOptions">
+            <% categories.forEach(cat => { %>
+              <button type="button" class="trap-option" data-category="<%= cat.name %>">
+                <img src="<%= cat.image %>" alt="<%= cat.name %>" />
+                <span><%= cat.name %></span>
+              </button>
+            <% }) %>
+          </div>
+        </div>
+        <div style="height: 1 rem;"></div>
+      </div>
+
+      <%# ── Continue button ── %>
+      <div class="question">
+        <button id="btnContinue"
+                class="rc-btn rc-btn--pink rainbow"
+                disabled
+                style="width:220px;">
+          Continuar ♡
+        </button>
+      </div>
+
+      <%# ── Steps indicator ── %>
+      <div>
+        <ul class="rc-steps">
+          <li class="rc-step <%= currentStep >= 1 ? 'rc-step--active' : '' %>">Invitación</li>
+          <li class="rc-step <%= currentStep >= 2 ? 'rc-step--active' : '' %>">Plan</li>
+          <li class="rc-step <%= currentStep >= 3 ? 'rc-step--active' : '' %>">Fecha</li>
+        </ul>
+      </div>
+
+    </div><%# /date-body %>
+  </div><%# /rc-window %>
 </main>
 
+<%# ── Activities modal ── %>
 <div id="activitiesModal" class="rc-modal">
-    <div class="modal-window activities-modal">
-        <div class="rc-window-bar">
-            <span class="rc-dot rc-dot--red"></span>
-            <span class="rc-dot rc-dot--yellow"></span>
-            <span class="rc-dot rc-dot--green"></span>
-            <span class="rc-window-title">Decisiones, decisiones ...</span>
-            <button class="modal-close-x" id="closeActivitiesModal" aria-label="Cerrar">&times;</button>
-        </div>
-
-        <div class="modal-body">
-            <h2 class="rc-title" style="font-size:1.6rem;">Actividades</h2>
-            <p class="rc-subtitle">Elige la actividad que más te guste de la categoría. Si ninguna te convence, pueden volver atras a cambiar de categoria.</p>
-
-            <div class="activities-grid" id="activitiesGrid">
-                <!-- se llena dinámicamente vía JS -->
-            </div>
-
-            <button id="btnConfirmActivity" class="rc-btn rc-btn--pink rainbow" disabled style="width:220px;">Último paso ♡</button>
-        </div>
+  <div class="modal-window activities-modal">
+    <div class="rc-window-bar">
+      <span class="rc-dot rc-dot--red"></span>
+      <span class="rc-dot rc-dot--yellow"></span>
+      <span class="rc-dot rc-dot--green"></span>
+      <span class="rc-window-title">Decisiones, decisiones ...</span>
+      <button class="modal-close-x" id="closeActivitiesModal" aria-label="Cerrar">&times;</button>
     </div>
+
+    <div class="modal-body">
+      <h2 class="rc-title" style="font-size:1.6rem;">Actividades</h2>
+      <p class="rc-subtitle">
+        Elige la actividad que más te guste de la categoría.
+        Si ninguna te convence, pueden volver atrás a cambiar de categoría.
+      </p>
+
+      <div class="activities-grid" id="activitiesGrid">
+        <%# filled dynamically via JS %>
+      </div>
+
+      <button id="btnConfirmActivity"
+              class="rc-btn rc-btn--pink rainbow"
+              disabled
+              style="width:220px;">
+        Último paso ♡
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
-    window.categories = <%- JSON.stringify(categories) %>;
+  window.categories = <%- JSON.stringify(categories) %>;
 </script>
 <script src="/js/category.js"></script>
