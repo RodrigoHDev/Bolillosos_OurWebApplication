@@ -7,15 +7,18 @@ Declaration of functions to send emails through Resend*/
 
 const { Resend } = require("resend");
 const resend = new Resend(process.env.RESEND_API_KEY);
+resend.domains.create({ name: 'contact.bolillosos.online' });
+
+// Centralize the sender so you only have to change it in one place
+const FROM_EMAIL = 'Bolillosos <no-reply@contact.bolillosos.online>';
 
 //------------------------------------------------------
 /*sendResetEmail
 Function that allows to send an email based on the given parameters*/
 
 const sendResetEmail = async function sendResetEmail(email, subject, html) {
-    const fromEmail = 'Bolillosos <onboarding@resend.dev>';
     const { error } = await resend.emails.send({
-        from: fromEmail,
+        from: FROM_EMAIL,
         to: [email],
         subject: subject,
         html: html,
@@ -30,9 +33,8 @@ const sendResetEmail = async function sendResetEmail(email, subject, html) {
 Specialized function to send an email with attachments*/
 
 const sendAppointmentEmail = async function sendAppointmentEmail(email, subject, html, attachments = []) {
-    const fromEmail = 'Bolillosos <onboarding@resend.dev>';
     const { error } = await resend.emails.send({
-        from: fromEmail,
+        from: FROM_EMAIL,
         to: [email],
         subject,
         html,
