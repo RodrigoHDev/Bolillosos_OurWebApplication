@@ -11,6 +11,7 @@ the token of that user (role authenticated) and RLS starts hiding rows.
 */
 
 const { createClient } = require('@supabase/supabase-js');
+const ws = require('ws');
 
 const createAuthClient = function createAuthClient() {
     return createClient(
@@ -21,6 +22,10 @@ const createAuthClient = function createAuthClient() {
                 persistSession: false,
                 autoRefreshToken: false,
                 detectSessionInUrl: false
+            },
+            //Node 20 (Render) has no native WebSocket: without it the client throws
+            realtime: {
+                transport: ws
             }
         }
     );
