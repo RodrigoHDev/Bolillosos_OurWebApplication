@@ -147,6 +147,9 @@ body {
   gap: 1.25rem;
 }
 
+/* Narrow window (forms, e.g. login) */
+.rc-window--narrow { max-width: 420px; }
+
 /* ================================================================
    AVATAR
    ================================================================ */
@@ -209,6 +212,10 @@ body {
   line-height: 1;
   padding-bottom: 1rem;
 }
+
+/* Smaller title (modals). Double class so it also wins over the
+   mobile .rc-title override in RESPONSIVE UTILITIES */
+.rc-title.rc-title--sm { font-size: 1.6rem; }
 
 .rc-subtitle {
   font-size: 13px;
@@ -378,11 +385,23 @@ body {
 /* Full width */
 .rc-btn--full { width: 100%; }
 
+/* Wide fixed width (main call-to-action buttons) */
+.rc-btn--wide { width: 220px; }
+
 /* Small size */
 .rc-btn--sm {
   font-size: 14px;
   letter-spacing: 1px;
   padding: 6px 16px;
+}
+
+/* Back button pinned to the top-left corner of the viewport.
+   Usage: <a class="rc-btn rc-btn--ghost rc-btn--sm rc-back-btn">← Inicio</a> */
+.rc-back-btn {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
 }
 
 /* ================================================================
@@ -405,6 +424,13 @@ body {
 .rc-badge--blue   { background: var(--rc-blue);   border-color: var(--rc-blue-border);  color: var(--rc-blue-text); }
 .rc-badge--green  { background: var(--rc-green);  border-color: var(--rc-green-border); color: var(--rc-green-text); }
 .rc-badge--yellow { background: var(--rc-yellow); border-color: var(--rc-yellow-border);color: var(--rc-yellow-text); }
+
+/* Wrapping row of badges */
+.rc-badge-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
 
 /* ================================================================
    CARDS
@@ -788,11 +814,20 @@ body {
     }
 }
 
-.date-window{
+/* ================================================================
+   DATES FLOW  —  shared window for invitation / category / schedule
+   Usage:
+     <div class="rc-window flow-window">
+       <div class="rc-window-bar"> … </div>
+       <div class="flow-body"> … </div>
+     </div>
+   ================================================================ */
+
+.flow-window{
     max-width:950px;
 }
 
-.date-body{
+.flow-body{
     display:flex;
     flex-direction:column;
     gap:2rem;
@@ -860,13 +895,18 @@ body {
     font-size:2rem;
 }
 
-.date-buttons{
+/* Sí / No buttons of the invitation page */
+.invitation-buttons{
     margin-top:1.5rem;
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:1rem;
     position:relative;
     place-items: center;
+}
+
+.invitation-buttons .rc-btn{
+    width:150px;
 }
 
 #btnNo{
@@ -962,7 +1002,7 @@ body {
 }
 
 @media(max-width:650px){
-    .date-buttons{
+    .invitation-buttons{
         grid-template-columns:1fr;
     }
 }
@@ -971,6 +1011,12 @@ body {
     font-family:var(--rc-font-retro);
     font-size:3rem;
     text-align:center;
+}
+
+/* Smaller page heading (category / schedule). Double class so it wins
+   over .hero-title h1 */
+.hero-greeting.hero-greeting--sm{
+    font-size:2.6rem;
 }
 
 .animated-salutation{
@@ -1500,6 +1546,152 @@ body {
     cursor:not-allowed;
     animation:none;
     box-shadow:3px 3px 0 var(--rc-pink-border);
+}
+
+
+/* ================================================================
+   CATEGORY PAGE — mobile
+   Desktop styles are the sections above (SLOT MACHINE … ACTIVITIES
+   MODAL). These overrides must stay after them.
+   ================================================================ */
+
+/* Mobile tap button that replaces the lever.
+   Hidden on desktop, shown by the media query below. It fires a click on
+   #slotLever so category.js needs no changes. */
+.slot-lever-mobile{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:.4rem;
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:var(--rc-pink-deep);
+    border:3px solid var(--rc-pink-border);
+    box-shadow:4px 4px 0 var(--rc-pink-border);
+    cursor:pointer;
+    font-family:var(--rc-font-retro);
+    font-size:.75rem;
+    letter-spacing:1px;
+    color:white;
+    text-align:center;
+    line-height:1.2;
+    transition:transform .1s, box-shadow .1s;
+    animation:rainbowGlow 2s linear infinite;
+}
+
+.slot-lever-mobile:hover{
+    transform:translate(-1px,-1px);
+    box-shadow:5px 5px 0 var(--rc-pink-border);
+}
+
+.slot-lever-mobile:active{
+    transform:translate(2px,2px);
+    box-shadow:2px 2px 0 var(--rc-pink-border);
+}
+
+.slot-lever-mobile-icon{ font-size:1.4rem; line-height:1; }
+
+@media (max-width: 600px){
+
+    /* Window edge-to-edge */
+    .category-window{
+        max-width:100% !important;
+        border-radius:0;
+        border-left:none;
+        border-right:none;
+        box-shadow:none;
+    }
+
+    .category-window .flow-body{ padding:1.1rem 1rem; gap:1.1rem; }
+
+    /* Slot machine: vertical stack */
+    .slot-machine{
+        flex-direction:column;
+        align-items:center;
+        gap:1rem;
+        padding:1rem;
+    }
+
+    .slot-reels{
+        flex-direction:column;
+        align-items:center;
+        gap:.6rem;
+        padding:.6rem;
+        width:45%;
+    }
+
+    .slot-reel{ width:100% !important; }
+
+    /* Images inside the reel fill the square, centered crop */
+    .slot-strip img{
+        width:100% !important;
+        object-fit:cover;
+        object-position:center;
+    }
+
+    /* Lever → circular tap button */
+    .slot-lever{ display:none; }
+    .slot-lever-mobile{ display:flex !important; }
+    .lever-label{ display:none; }
+
+    .lever-wrap{
+        flex-direction:column;
+        align-items:center;
+        gap:0;
+        width:100%;
+    }
+
+    /* Trap options: 2-col grid with compact images */
+    .trap-options{
+        grid-template-columns:repeat(2, 1fr);
+        gap:.5rem;
+    }
+
+    .trap-option{
+        padding:.5rem .4rem;
+        font-size:.78rem;
+        gap:.3rem;
+        border-radius:10px;
+    }
+
+    .trap-option img{
+        display:block !important;
+        width:100%;
+        height:100px;
+        object-fit:cover;
+        object-position:center;
+        border-radius:6px;
+    }
+
+    /* Result card */
+    .result-card-inner{ padding:1rem 1.25rem; gap:.5rem; }
+    .result-image-wrap{ width:100px; height:100px; }
+
+    /* Steps */
+    .category-window .rc-step{ font-size:.7rem; padding-top:34px; }
+
+    /* Continue button */
+    #btnContinue{ width:100% !important; }
+
+    /* Activities modal */
+    .activities-modal{
+        width:96% !important;
+        max-height:90svh;
+        overflow-y:auto;
+    }
+
+    .activities-grid{
+        grid-template-columns:repeat(2, 1fr) !important;
+        max-height:55svh;
+    }
+}
+
+@media (max-width: 380px){
+    /* Slightly shorter reels on tiny screens */
+    .slot-reel{ aspect-ratio:16 / 6 !important; }
+    .trap-option img{ height:50px; }
 }
 
 

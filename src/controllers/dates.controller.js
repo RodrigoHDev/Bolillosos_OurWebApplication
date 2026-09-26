@@ -4,7 +4,10 @@ Author: R. Hurtado
 Date: 07/07/2026 
 Description: 
 Controller of the dates section of the application.
-Render of the pages that form part of the Dates Module.
+Render of the pages that form part of the Dates Module, in flow order:
+1. Invitation (pages/invitation)
+2. Category + Activity (pages/category)
+3. Schedule: day and hour (pages/schedule)
 */
 
 //Import of used resources.
@@ -36,10 +39,10 @@ function getGalleryImages(folderPath, urlPrefix) {
 
 //------------------------------------------------------
 
-/*getAcceptDate
-Render of the invitation and letter page.*/
+/*getInvitationPage
+Render of the invitation and letter page. Step 1 of the Dates flow.*/
 
-exports.getAcceptDate = (request, response, next) => {
+exports.getInvitationPage = (request, response, next) => {
 
     //=========================
     /* Obtention of all available images in the gallery folder
@@ -56,8 +59,8 @@ exports.getAcceptDate = (request, response, next) => {
         return response.redirect('/auth/login');
     }
     //=========================
-    /*Render of the dates page*/
-    response.render("pages/dates",{
+    /*Render of the invitation page*/
+    response.render("pages/invitation",{
         title: "Cita? ♡",
         images,
         currentStep: 1
@@ -84,7 +87,7 @@ exports.getCategoryPage = async (request,response,next)=>{
         console.error(error);
         return response.status(500).send("Error loading categories");
         request.session.error = 'Las categorias no pudieron ser cargadas de base de datos.\n Contactame preciosa.';
-        return response.redirect('/date/accept');
+        return response.redirect('/dates/invitation');
     }
     //=========================
     /*Render of the category page*/
@@ -97,17 +100,17 @@ exports.getCategoryPage = async (request,response,next)=>{
 
 //------------------------------------------------------
 
-/*getTopicsByCategory
-AJAX response to return activities of a given category*/
+/*getActivitiesByCategory
+AJAX response to return activities (public.options) of a given category*/
 
-exports.getTopicsByCategory = async (request, response, next) => {
+exports.getActivitiesByCategory = async (request, response, next) => {
     //Obtention of the given category
     const { category } = request.query;
 
     if (!category) {
         return response.status(400).json({ error: "category es requerido" });
         request.session.error = 'Se requiere de una categoria.\n Contactame preciosa.';
-        return response.redirect('/date/category');
+        return response.redirect('/dates/category');
     }
 
     //=========================
@@ -122,36 +125,37 @@ exports.getTopicsByCategory = async (request, response, next) => {
     if (categoryError || !categoryRow) {
         return response.status(404).json({ error: "Categoría no encontrada" });
         request.session.error = 'Categoria no encontrada';
-        return response.redirect('/date/category');
+        return response.redirect('/dates/category');
     }
     //=========================
 
     //=========================
     /*Call and obtain the activities of a given category based on its id [Supabase]*/
-    const { data: topics, error: topicsError } = await supabase
+    const { data: activities, error: activitiesError } = await supabase
         .from("options")
         .select("name, id")
         .eq("category_id", categoryRow.id);
 
     //Supabase Error Handling
-    if (topicsError) {
-        console.error(topicsError);
+    if (activitiesError) {
+        console.error(activitiesError);
         return response.status(500).json({ error: "Error cargando actividades" });
         request.session.error = 'Error cargando actividades';
-        return response.redirect('/date/category');
+        return response.redirect('/dates/category');
     }
     //=========================
 
-    //Return the topics objects
-    response.json({ topics });
+    //Return the activities objects
+    response.json({ activities });
 };
 
 //------------------------------------------------------
 
-/*getDatesPage
-Function responsible for the render of the date pages*/
+/*getSchedulePage
+Function responsible for the render of the schedule page (day and hour
+selection). Step 3 of the Dates flow.*/
 
-exports.getDatesPage = async (request, response, next) => {
+exports.getSchedulePage = async (request, response, next) => {
     //Obtention of the category and activity sent by URL
     const { category, activity } = request.query;
 
@@ -160,41 +164,40 @@ exports.getDatesPage = async (request, response, next) => {
 
     //=========================
     /*Call and obtain the dates of any date stored which end date is greater or equal than today [Supabase]*/
-    const { data: dates, error: datesError } = await supabase
+    const { data: existingDates, error: existingDatesError } = await supabase
         .from("dates")
         .select("start_date, end_date, option_id, created_by")
         .gte("end_date", today);
-    
+
     //Supabase Error Handling
-        if (datesError) {
-        console.log(datesError);
+        if (existingDatesError) {
+        console.log(existingDatesError);
         request.session.error = 'Citas anteriores no pudieron ser obtenidas';
-        return response.redirect('/date/category');
+        return response.redirect('/dates/category');
     }
     //=========================
 
     //=========================
-    /*Call and obtain the name of a given activity based on its id [Supabase]*/
-    const { data: topicData, error: topicError } = await supabase
+    /*Call and validate that the given activity exists based on its id [Supabase]*/
+    const { data: activityData, error: activityError } = await supabase
         .from("options")
         .select("id")
-        .eq("id", activity)   
+        .eq("id", activity)
         .single();
 
     //Supabase Error Handling
-    if (topicError || !topicData) {
-        console.log(topicError)
+    if (activityError || !activityData) {
+        console.log(activityError)
         request.session.error = 'La actividad seleccionada no fue encontrada';
-        return response.redirect('/date/category');
+        return response.redirect('/dates/category');
     }
     //=========================
 
-    //Render of the date pages
-    response.render('pages/date', {
+    //Render of the schedule page
+    response.render('pages/schedule', {
         title: '✦ Fecha y Hora',
-        dates,
+        existingDates,
         category,
-        activity,
         activityId: activity,
         csrfToken: request.csrfToken(),
         currentStep: 3
@@ -203,12 +206,12 @@ exports.getDatesPage = async (request, response, next) => {
 
 //------------------------------------------------------
 
-/*finishDate
-Function responsible for gathering every information from the given 
-form in the date page and process it before triggering the conclusion
-modal*/
+/*saveDate
+Function responsible for gathering every information from the given
+form in the schedule page, storing the date and sending the confirmation
+emails before triggering the conclusion modal*/
 
-exports.finishDate = async (request, response, next) => {
+exports.saveDate = async (request, response, next) => {
     //Stored variables in hidden form
     const { activityId, startDate, endDate } = request.body;
     const user_id = request.session.user.id;

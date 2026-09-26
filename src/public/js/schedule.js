@@ -1,9 +1,10 @@
 /*
-Title: date-picker.js
+Title: schedule.js
 Author: R. Hurtado
 Date: 07/07/2026 
 Description: 
-File responsible for the render of the calendar in the date page.
+Behavior of the schedule page of the Dates module. (Step 3)
+Render of the calendar, day/hour selection and submit of the date.
 */
 
 
@@ -285,7 +286,7 @@ const btnConfirmHour = document.getElementById("btnConfirmHour");
 
 const calendarContainer = document.querySelector("[data-date-picker]");
 
-const dateForm = document.getElementById("dateForm");
+const scheduleForm = document.getElementById("scheduleForm");
 const confirmModal = document.getElementById("confirmModal");
 
 renderCalendar();
@@ -329,21 +330,21 @@ document.addEventListener("click", (e) => {
     }
 });
 
-dateForm.addEventListener("submit", async (e) => {
+scheduleForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     
     btnFinish.disabled = true;
     btnFinish.textContent = "Guardando...";
 
     const payload = {
-        _csrf: dateForm.querySelector('[name="_csrf"]').value,
-        activityId: dateForm.querySelector('[name="activityId"]').value,
+        _csrf: scheduleForm.querySelector('[name="_csrf"]').value,
+        activityId: scheduleForm.querySelector('[name="activityId"]').value,
         startDate: formStartDate.value,
         endDate: formEndDate.value
     };
 
     try {
-        const response = await fetch(dateForm.action, {
+        const response = await fetch(scheduleForm.action, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)

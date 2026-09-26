@@ -91,7 +91,7 @@ exports.doLogin = async (request, response, next) => {
                 request.session.success = '';
                 return response.redirect('/auth/login');
             }
-            return response.redirect('/date/accept');
+            return response.redirect('/dates/invitation');
         });
 
     //General Error Handling

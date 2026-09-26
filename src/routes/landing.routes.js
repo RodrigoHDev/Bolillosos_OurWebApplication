@@ -1,13 +1,12 @@
 /*
-Title: auth.routes.js
+Title: landing.routes.js
 Author: R. Hurtado
 Date: 07/15/2026 
 Description: 
-Routes for the Auth module.
+Routes for the Landing module.
 
 Actions available:
-- Render login
-- Perform login
+- Render landing page
 */
 
 const express = require('express');

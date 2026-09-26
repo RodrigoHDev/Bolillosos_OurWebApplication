@@ -107,7 +107,7 @@ app.use('/auth', routesAuth);
 
 //Dates
 const routesDates = require('./src/routes/dates.routes');
-app.use('/date', routesDates);
+app.use('/dates', routesDates);
 
 
 /*Additional catch over expired csurf verification code

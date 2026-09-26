@@ -1,9 +1,9 @@
 /*
-Title: dates.js
+Title: invitation.js
 Author: R. Hurtado
 Date: 07/07/2026 
 Description: 
-Behavior of the date page of the Date module.
+Behavior of the invitation page of the Dates module. (Step 1)
 - Movement of the names in salutation.
 - Movement of the 'no' button when cursor is close.
 - Appearance and close of the modal.
@@ -124,7 +124,7 @@ salutationText.classList.add("show");
 setInterval(nextSalutation,1800);
 
 
-/*Modificacion de movimiento y creacion de carrusel en dates*/
+/*Modificacion de movimiento y creacion de carrusel en invitation*/
 
 document.addEventListener("DOMContentLoaded", () => {
     const track = document.getElementById("carouselTrack");

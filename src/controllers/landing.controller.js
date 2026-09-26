@@ -12,8 +12,8 @@ functions as the database calls (Supabase) are performed here.
 const { request, response } = require("express");
 const supabase = require ('../utils/webServices/supabase/supabase');
 
-/*getLogin
-Function responsible for rendering the login page.
+/*getLandingPage
+Function responsible for rendering the public landing page.
 */
 
 exports.getLandingPage = (request, response, next)=>{

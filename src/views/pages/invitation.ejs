@@ -1,5 +1,5 @@
 <main class="rc-center">
-    <div class="rc-window date-window">
+    <div class="rc-window flow-window">
             <div class="rc-window-bar">
                 <span class="rc-dot rc-dot--red"></span>
                 <span class="rc-dot rc-dot--yellow"></span>
@@ -7,7 +7,7 @@
                 <span class="rc-window-title">✦ Cita</span>
             </div>
 
-        <div class="date-body">
+        <div class="flow-body">
 
             <div class="hero-title">
                 <h1 class="hero-greeting"> Hola <span id="salutationText" class="animated-salutation">Hermosa</span> ♡</h1>
@@ -25,7 +25,7 @@
             <div class="rc-card rc-card--green center">
                 <p style="padding-bottom: 5px;">Me encantan</p>
 
-                <div style="display:flex; gap:6px; flex-wrap:wrap; padding: 5px 0px">
+                <div class="rc-badge-row" style="padding: 5px 0px">
                     <span class="rc-badge rc-badge--pink">Tus ojos</span>
                     <span class="rc-badge rc-badge--yellow">Tu sonrisa</span>
                     <span class="rc-badge rc-badge--blue">Tu risa</span>
@@ -33,7 +33,7 @@
                     <span class="rc-badge rc-badge--yellow">Tu cuerpo</span>
                 </div>
 
-                <div style="display:flex; gap:6px; flex-wrap:wrap; padding: 5px 0px">
+                <div class="rc-badge-row" style="padding: 5px 0px">
                     <span class="rc-badge rc-badge--pink">Quien eres hoy</span>
                     <span class="rc-badge rc-badge--yellow">Quien seras mañana</span>
                     <span class="rc-badge rc-badge--blue">Siempre</span>
@@ -61,14 +61,14 @@
 
             <div class="question">
                 <h2>¿Te gustaría tener una cita conmigo?</h2>
-                <div class="date-buttons">
+                <div class="invitation-buttons">
                     <button
                     id="btnYes"
-                    class="rc-btn rc-btn--pink rainbow" style="width: 150px;">♡ Sí ♡</button>
+                    class="rc-btn rc-btn--pink rainbow">♡ Sí ♡</button>
 
                     <button
                     id="btnNo"
-                    class="rc-btn rc-btn--pink" style="width: 150px;">No</button>
+                    class="rc-btn rc-btn--pink">No</button>
                 </div>
             </div>
 
@@ -98,9 +98,9 @@
             <div class="modal-image">
                 <img src="/images/cat-kitty.gif" style="border-radius: 10px;">
             </div>
-            <button class="rc-btn rc-btn--pink"id="closeModal" onclick="window.location.href='/date/category'">Continuar ♡</button>
+            <button class="rc-btn rc-btn--pink" id="closeModal" onclick="window.location.href='/dates/category'">Continuar ♡</button>
         </div>
     </div>
 </div>
 
-<script src="/js/dates.js"></script>
+<script src="/js/invitation.js"></script>

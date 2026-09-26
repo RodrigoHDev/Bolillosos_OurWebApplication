@@ -1,4 +1,13 @@
-// public/js/category.js
+/*
+Title: category.js
+Author: R. Hurtado
+Date: 07/07/2026 
+Description: 
+Behavior of the category page of the Dates module. (Step 2)
+- Slot machine to pick a category.
+- Trap list to pick a category directly.
+- Activities modal (AJAX to /dates/activities).
+*/
 
 //---------------------------------------------------------------------
 // FUNCTIONS
@@ -234,25 +243,25 @@ async function openActivitiesModal(categoryName) {
     activitiesModal.classList.add("active");
 
     try {
-        const response = await fetch(`/date/topics?category=${encodeURIComponent(categoryName)}`);
+        const response = await fetch(`/dates/activities?category=${encodeURIComponent(categoryName)}`);
         if (!response.ok) throw new Error("Request failed");
         const data = await response.json();
-        renderActivities(data.topics);
+        renderActivities(data.activities);
     } catch (error) {
         activitiesGrid.innerHTML = `<p class="activities-error">No se pudieron cargar las actividades. Intenta de nuevo.</p>`;
     }
 }
 
-function renderActivities(topics) {
-    if (!topics || topics.length === 0) {
+function renderActivities(activities) {
+    if (!activities || activities.length === 0) {
         activitiesGrid.innerHTML = `<p class="activities-error">No hay actividades para esta categoría todavía.</p>`;
         return;
     }
 
-    activitiesGrid.innerHTML = topics.map((t, i) => `
-        <button type="button" class="activity-option" data-activity-id="${t.id}" data-activity-name="${t.name}">
+    activitiesGrid.innerHTML = activities.map((a, i) => `
+        <button type="button" class="activity-option" data-activity-id="${a.id}" data-activity-name="${a.name}">
             <span class="activity-dot">${activityIcons[i % activityIcons.length]}</span>
-            <span class="activity-name">${t.name}</span>
+            <span class="activity-name">${a.name}</span>
         </button>
     `).join("");
 
@@ -376,5 +385,5 @@ activitiesModal.addEventListener("click", (e) => {
 btnConfirmActivity.addEventListener("click", () => {
     if (btnConfirmActivity.disabled) return;
     const category = finalCategoryInput.value;
-    window.location.href = `/date/date?category=${encodeURIComponent(category)}&activity=${encodeURIComponent(selectedActivity.id)}`;
+    window.location.href = `/dates/schedule?category=${encodeURIComponent(category)}&activity=${encodeURIComponent(selectedActivity.id)}`;
 });

@@ -1,172 +1,5 @@
-<style>
-/* ================================================================
-   CATEGORY PAGE — mobile fixes
-   PC styles are untouched. All mobile overrides are scoped inside
-   @media (max-width: 600px) or @media (max-width: 380px).
-   ================================================================ */
-
-/* Always: slot machine never overflows its parent */
-.slot-machine { width: 100%; box-sizing: border-box; }
-
-/* ================================================================
-   MOBILE  ≤ 600px
-   ================================================================ */
-@media (max-width: 600px) {
-
-  /* Window edge-to-edge */
-  .date-window {
-    max-width: 100% !important;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    box-shadow: none;
-  }
-
-  .date-body { padding: 1.1rem 1rem; gap: 1.1rem; }
-
-  /* ── Slot machine: vertical stack ── */
-  .slot-machine {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-  }
-
-  .slot-reels {
-    flex-direction: column;
-    align-items: center;
-    gap: .6rem;
-    padding: .6rem;
-    width: 45%;
-  }
-
-  .slot-reel {
-    width: 100% !important;
-   }
-
- /* Images inside the reel fill the square, centered crop */
-  .slot-strip img {
-    width: 100% !important;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  /* ── Lever → circular tap button on mobile ── */
-
-  /* Hide the original CSS lever entirely */
-  .slot-lever { display: none; }
-
-  /* Show the mobile tap button (defined in HTML below, hidden on desktop) */
-  .slot-lever-mobile {
-    display: flex !important;     /* overrides the desktop display:none */
-  }
-
-  /* Hide the lever label — the button has its own label */
-  .lever-label { display: none; }
-
-  /* The lever-wrap just centers the mobile button */
-  .lever-wrap {
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-    width: 100%;
-  }
-
-  /* ── Trap options: 2-col grid WITH compact images ── */
-  .trap-options {
-    grid-template-columns: repeat(2, 1fr);
-    gap: .5rem;
-  }
-
-  .trap-option {
-    padding: .5rem .4rem;
-    font-size: .78rem;
-    gap: .3rem;
-    border-radius: 10px;
-    /* Images back on, but small and square */
-  }
-
-  .trap-option img {
-    display: block !important;   /* was hidden in previous version — now show */
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 6px;
-  }
-
-  /* ── Result card ── */
-  .result-card-inner { padding: 1rem 1.25rem; gap: .5rem; }
-  .result-image-wrap { width: 100px; height: 100px; }
-
-  /* ── Steps ── */
-  .rc-step { font-size: .7rem; padding-top: 34px; }
-
-  /* ── Continue button ── */
-  #btnContinue { width: 100% !important; }
-
-  /* ── Activities modal ── */
-  .activities-modal {
-    width: 96% !important;
-    max-height: 90svh;
-    overflow-y: auto;
-  }
-  .activities-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    max-height: 55svh;
-  }
-}
-
-/* ================================================================
-   VERY SMALL  ≤ 380px
-   ================================================================ */
-@media (max-width: 380px) {
-  /* Slightly shorter reels on tiny screens */
-  .slot-reel { aspect-ratio: 16 / 6 !important; }
-
-  .trap-option img { height: 50px; }
-}
-
-/* ================================================================
-   MOBILE TAP BUTTON — hidden on desktop, shown on mobile via media query above
-   ================================================================ */
-.slot-lever-mobile {
-  display: none;               /* hidden on PC; @media above sets display:flex */
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: .4rem;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: var(--rc-pink-deep);
-  border: 3px solid var(--rc-pink-border);
-  box-shadow: 4px 4px 0 var(--rc-pink-border);
-  cursor: pointer;
-  font-family: var(--rc-font-retro);
-  font-size: .75rem;
-  letter-spacing: 1px;
-  color: white;
-  text-align: center;
-  line-height: 1.2;
-  transition: transform .1s, box-shadow .1s;
-  animation: rainbowGlow 2s linear infinite;
-}
-
-.slot-lever-mobile:hover  {
-  transform: translate(-1px,-1px);
-  box-shadow: 5px 5px 0 var(--rc-pink-border);
-}
-.slot-lever-mobile:active {
-  transform: translate(2px,2px);
-  box-shadow: 2px 2px 0 var(--rc-pink-border);
-}
-
-.slot-lever-mobile-icon { font-size: 1.4rem; line-height: 1; }
-</style>
-
 <main class="rc-center">
-  <div class="rc-window date-window">
+  <div class="rc-window flow-window category-window">
     <div class="rc-window-bar">
       <span class="rc-dot rc-dot--red"></span>
       <span class="rc-dot rc-dot--yellow"></span>
@@ -174,10 +7,10 @@
       <span class="rc-window-title">✦ Categoría</span>
     </div>
 
-    <div class="date-body">
+    <div class="flow-body">
 
       <div class="hero-title">
-        <h1 class="hero-greeting" style="font-size:2.6rem;">¿Qué haremos?</h1>
+        <h1 class="hero-greeting hero-greeting--sm">¿Qué haremos?</h1>
         <p class="rc-subtitle">Categoría</p>
       </div>
 
@@ -271,9 +104,8 @@
       <%# ── Continue button ── %>
       <div class="question">
         <button id="btnContinue"
-                class="rc-btn rc-btn--pink rainbow"
-                disabled
-                style="width:220px;">
+                class="rc-btn rc-btn--pink rc-btn--wide rainbow"
+                disabled>
           Continuar ♡
         </button>
       </div>
@@ -287,7 +119,7 @@
         </ul>
       </div>
 
-    </div><%# /date-body %>
+    </div><%# /flow-body %>
   </div><%# /rc-window %>
 </main>
 
@@ -303,7 +135,7 @@
     </div>
 
     <div class="modal-body">
-      <h2 class="rc-title" style="font-size:1.6rem;">Actividades</h2>
+      <h2 class="rc-title rc-title--sm">Actividades</h2>
       <p class="rc-subtitle">
         Elige la actividad que más te guste de la categoría.
         Si ninguna te convence, pueden volver atrás a cambiar de categoría.
@@ -314,9 +146,8 @@
       </div>
 
       <button id="btnConfirmActivity"
-              class="rc-btn rc-btn--pink rainbow"
-              disabled
-              style="width:220px;">
+              class="rc-btn rc-btn--pink rc-btn--wide rainbow"
+              disabled>
         Último paso ♡
       </button>
     </div>

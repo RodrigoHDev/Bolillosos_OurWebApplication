@@ -1,5 +1,5 @@
 <main class="rc-center">
-    <div class="rc-window date-window">
+    <div class="rc-window flow-window">
         <div class="rc-window-bar">
             <span class="rc-dot rc-dot--red"></span>
             <span class="rc-dot rc-dot--yellow"></span>
@@ -7,9 +7,9 @@
             <span class="rc-window-title">✦ Fecha y Hora</span>
         </div>
 
-        <div class="date-body">
+        <div class="flow-body">
             <div class="hero-title">
-                <h1 class="hero-greeting" style="font-size:2.6rem;">Fecha y Hora</h1>
+                <h1 class="hero-greeting hero-greeting--sm">Fecha y Hora</h1>
             </div>
 
             <p class="rc-card rc-card--pink">
@@ -38,14 +38,14 @@
                 <span id="selectionText"></span>
             </div>
 
-            <form id="dateForm" action="/date/date" method="POST">
+            <form id="scheduleForm" action="/dates/schedule" method="POST">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
                 <input type="hidden" name="activityId" value="<%= activityId %>">
                 <input type="hidden" name="startDate" id="formStartDate" value="">
                 <input type="hidden" name="endDate" id="formEndDate" value="">
 
                 <div class="question">
-                    <button type="submit" id="btnFinish" class="rc-btn rc-btn--pink rainbow" disabled style="width:220px;">¡Finalizar!</button>
+                    <button type="submit" id="btnFinish" class="rc-btn rc-btn--pink rc-btn--wide rainbow" disabled>¡Finalizar!</button>
                 </div>
             </form>
 
@@ -79,7 +79,7 @@
 
             <div class="hour-grid" id="hourGrid"></div>
 
-            <button id="btnConfirmHour" class="rc-btn rc-btn--pink rainbow" disabled style="width:220px;">Confirmar hora</button>
+            <button id="btnConfirmHour" class="rc-btn rc-btn--pink rc-btn--wide rainbow" disabled>Confirmar hora</button>
         </div>
     </div>
 </div>
@@ -103,15 +103,15 @@
                 <img src="/images/bollito_feliz.jpg">
             </div>
 
-            <p class="rc-title" style="font-size:1.6rem;">Te Amoooooo!</p>
+            <p class="rc-title rc-title--sm">Te Amoooooo!</p>
 
-            <a href="/date/accept" class="rc-btn rc-btn--pink rainbow" style="width:220px; text-decoration:none;">Continuar ♡</a>
+            <a href="/dates/invitation" class="rc-btn rc-btn--pink rc-btn--wide rainbow">Continuar ♡</a>
         </div>
     </div>
 </div>
 
 
 <script>
-    window.existingDates = <%- JSON.stringify(dates) %>;
+    window.existingDates = <%- JSON.stringify(existingDates) %>;
 </script>
-<script src="/js/date-picker.js"></script>
+<script src="/js/schedule.js"></script>
