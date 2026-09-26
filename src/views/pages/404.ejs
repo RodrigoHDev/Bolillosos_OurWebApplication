@@ -137,11 +137,14 @@
   <div class="rc-window error-card">
 
     <%# Title bar %>
-    <div class="rc-window-bar" aria-hidden="true">
-      <span class="rc-dot rc-dot--red"></span>
-      <span class="rc-dot rc-dot--yellow"></span>
-      <span class="rc-dot rc-dot--green"></span>
+    <div class="rc-window-bar">
+      <span class="rc-dot rc-dot--red" aria-hidden="true"></span>
+      <span class="rc-dot rc-dot--yellow" aria-hidden="true"></span>
+      <span class="rc-dot rc-dot--green" aria-hidden="true"></span>
       <span class="rc-window-title">✦ Error de Sistema</span>
+      <% if (typeof isAuth !== 'undefined' && isAuth) { %>
+        <%- include('../partials/window-nav', { active: '' }) %>
+      <% } %>
     </div>
 
     <%# Content row %>
@@ -167,7 +170,7 @@
         <div class="error-actions">
           <a href="<%= typeof homeUrl !== 'undefined' ? homeUrl : '/' %>"
              class="rc-btn rc-btn--pink rc-btn--sm">
-            ♡ Regresar al login
+            ♡ <%= typeof isAuth !== 'undefined' && isAuth ? 'Regresar al inicio' : 'Regresar al login' %>
           </a>
           <button onclick="history.back()"
                   class="rc-btn rc-btn--ghost rc-btn--sm">

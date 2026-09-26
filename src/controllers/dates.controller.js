@@ -20,9 +20,18 @@ const { formatAppointmentDateTime } = require("../utils/webServices/resend/appoi
 const { buildIcsContent } = require("../utils/webServices/resend/icsBuilder");
 const { sendAppointmentEmail } = require("../utils/webServices/resend/resend");
 const appointmentEmail = require("../utils/webServices/resend/template"); // tu template
+const { uploadCategoryImage, removeCategoryImage } = require("../utils/webServices/supabase/storage");
 
 
 /* AUXILIAR FUNCTIONS */
+
+/*escapeLikePattern
+Auxiliar function that escapes the wildcards of a text (% _ \) so it can be
+compared with .ilike() as an exact, case insensitive, name*/
+
+function escapeLikePattern(text) {
+    return text.replace(/[\\%_]/g, "\\$&");
+}
 
 /*getGalleryImages
 Auxiliar function responsible for obtaining all file names of a given direction and
@@ -80,7 +89,7 @@ exports.getCategoryPage = async (request,response,next)=>{
     /*Call and obtain categories information [Supabase]*/
     const { data: categories, error} = await supabase
         .from("category")
-        .select("name, image");
+        .select("id, name, image");
 
     //Supabase Error Handling
     if (error) {
@@ -94,9 +103,87 @@ exports.getCategoryPage = async (request,response,next)=>{
     response.render("pages/category", {
         categories,
         title: '✦ Categoría',
+        csrfToken: request.csrfToken(),
         currentStep: 2
     });
 }
+
+//------------------------------------------------------
+
+/*crearCategoria
+AJAX response to create a new category from the category page modal.
+Receives the name (request.body.name) and the image (request.file, by the
+uploadImage middleware). The image is stored in Supabase Storage and its
+public URL is the address stored in the category.*/
+
+exports.crearCategoria = async (request, response, next) => {
+    //Obtention of the information of the form
+    const name = (request.body.name || "").trim();
+    const image = request.file;
+
+    if (!name) {
+        return response.status(400).json({ success: false, error: "El nombre es requerido." });
+    }
+
+    if (!image) {
+        return response.status(400).json({ success: false, error: "La imagen es requerida." });
+    }
+
+    //=========================
+    /*Call and validate that there is no category with the same name [Supabase]*/
+    const { data: existingCategories, error: existingError } = await supabase
+        .from("category")
+        .select("id")
+        .ilike("name", escapeLikePattern(name))
+        .limit(1);
+
+    //Supabase Error Handling
+    if (existingError) {
+        console.error(existingError);
+        return response.status(500).json({ success: false, error: "No se pudo validar la categoría." });
+    }
+
+    if (existingCategories.length > 0) {
+        return response.status(409).json({ success: false, error: "Esta categoria ya existe." });
+    }
+    //=========================
+
+    //=========================
+    /*Upload of the image and obtention of its address [Supabase Storage]*/
+    let storedImage;
+
+    try {
+        storedImage = await uploadCategoryImage(image);
+    } catch (error) {
+        console.error(error);
+        return response.status(500).json({ success: false, error: "La imagen no pudo guardarse." });
+    }
+    //=========================
+
+    //=========================
+    /*Insertion of the category into the category table [Supabase]*/
+    const { error: insertError } = await supabase
+        .from("category")
+        .insert({
+            name,
+            image: storedImage.publicUrl
+        });
+
+    //Supabase Error Handling
+    if (insertError) {
+        console.error(insertError);
+        //The image is removed so it does not stay without category
+        await removeCategoryImage(storedImage.filePath);
+        return response.status(500).json({ success: false, error: "La categoría no pudo guardarse." });
+    }
+    //=========================
+
+    //Message shown once the page is reloaded
+    request.session.success = `Nueva Categoria: ${name} creada!`;
+
+    //Return AJAX response
+    return response.status(201).json({ success: true });
+};
 
 //------------------------------------------------------
 
@@ -147,6 +234,84 @@ exports.getActivitiesByCategory = async (request, response, next) => {
 
     //Return the activities objects
     response.json({ activities });
+};
+
+//------------------------------------------------------
+
+/*crearActividad
+AJAX response to create a new activity (public.options) of a category from
+the new activity modal.
+Receives the text of the activity (request.body.name) and the UUID of the
+category (request.body.categoryId).*/
+
+exports.crearActividad = async (request, response, next) => {
+    //Obtention of the information of the form
+    const name = (request.body.name || "").trim();
+    const categoryId = request.body.categoryId;
+
+    if (!name) {
+        return response.status(400).json({ success: false, error: "La actividad es requerida." });
+    }
+
+    if (!categoryId) {
+        return response.status(400).json({ success: false, error: "La categoría es requerida." });
+    }
+
+    //=========================
+    /*Call and validate that the category exists [Supabase]*/
+    const { data: categoryRow, error: categoryError } = await supabase
+        .from("category")
+        .select("id")
+        .eq("id", categoryId)
+        .single();
+
+    //Supabase Error Handling
+    if (categoryError || !categoryRow) {
+        console.error(categoryError);
+        return response.status(404).json({ success: false, error: "Categoría no encontrada." });
+    }
+    //=========================
+
+    //=========================
+    /*Call and validate that there is no activity with the same name in the category [Supabase]*/
+    const { data: existingActivities, error: existingError } = await supabase
+        .from("options")
+        .select("id")
+        .eq("category_id", categoryId)
+        .ilike("name", escapeLikePattern(name))
+        .limit(1);
+
+    //Supabase Error Handling
+    if (existingError) {
+        console.error(existingError);
+        return response.status(500).json({ success: false, error: "No se pudo validar la actividad." });
+    }
+
+    if (existingActivities.length > 0) {
+        return response.status(409).json({ success: false, error: "Esta actividad ya existe." });
+    }
+    //=========================
+
+    //=========================
+    /*Insertion of the activity into the options table [Supabase]*/
+    const { data: activity, error: insertError } = await supabase
+        .from("options")
+        .insert({
+            name,
+            category_id: categoryId
+        })
+        .select("id, name")
+        .single();
+
+    //Supabase Error Handling
+    if (insertError) {
+        console.error(insertError);
+        return response.status(500).json({ success: false, error: "La actividad no pudo guardarse." });
+    }
+    //=========================
+
+    //Return AJAX response
+    return response.status(201).json({ success: true, activity });
 };
 
 //------------------------------------------------------

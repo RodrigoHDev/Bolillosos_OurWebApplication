@@ -1,0 +1,147 @@
+<main class="rc-center">
+  <div class="rc-window flow-window">
+    <div class="rc-window-bar">
+      <span class="rc-dot rc-dot--red"></span>
+      <span class="rc-dot rc-dot--yellow"></span>
+      <span class="rc-dot rc-dot--green"></span>
+      <span class="rc-window-title">✦ Inicio</span>
+      <%- include('../partials/window-nav', { active: 'home' }) %>
+    </div>
+
+    <div class="flow-body home-body">
+
+      <%# ── Greeting (animated salutation: /js/home/salutation.js) ── %>
+      <div class="hero-title">
+        <h1 class="hero-greeting">Hola <span id="salutationText" class="animated-salutation">Hermosa</span> ♡</h1>
+        <p class="home-message">Esta es la actualización de nuestro aniversario!</p>
+      </div>
+
+      <%# ── Flowers + anniversary counter (/js/home/counter.js) ── %>
+      <section class="home-counter-wrap" aria-label="Tiempo juntos">
+        <%# Fan of flowers: all pivot on the same point above the counter.
+             The center one goes last so it stays on top %>
+        <div class="home-flowers" aria-hidden="true">
+          <span class="home-flower home-flower--outer" style="--home-flower-angle:-58deg">🌷</span>
+          <span class="home-flower home-flower--outer" style="--home-flower-angle:58deg">🌷</span>
+          <span class="home-flower home-flower--mid" style="--home-flower-angle:-29deg">🌸</span>
+          <span class="home-flower home-flower--mid" style="--home-flower-angle:29deg">🌸</span>
+          <span class="home-flower home-flower--center">🌹</span>
+        </div>
+
+        <div class="home-counter-stage">
+
+          <%# Small flowers and hearts around the counter (decorative) %>
+          <span class="home-counter-deco" style="top:6%;left:0;animation-delay:0s"          aria-hidden="true">🌸</span>
+          <span class="home-counter-deco home-counter-deco--heart" style="top:42%;left:3%;animation-delay:.8s"   aria-hidden="true">♥</span>
+          <span class="home-counter-deco" style="bottom:4%;left:1%;animation-delay:1.6s"    aria-hidden="true">🌼</span>
+          <span class="home-counter-deco home-counter-deco--heart" style="top:4%;right:2%;animation-delay:.4s"   aria-hidden="true">♡</span>
+          <span class="home-counter-deco" style="top:40%;right:0;animation-delay:1.2s"      aria-hidden="true">🌷</span>
+          <span class="home-counter-deco home-counter-deco--heart" style="bottom:6%;right:3%;animation-delay:2s" aria-hidden="true">♥</span>
+          <span class="home-counter-deco home-counter-deco--heart" style="bottom:-4%;left:46%;animation-delay:1s" aria-hidden="true">♡</span>
+
+          <div class="home-counter" id="homeCounter">
+            <div class="home-counter-row home-counter-row--date">
+              <div class="home-counter-unit"><span class="home-counter-value" data-counter-unit="years">0</span><span class="home-counter-label">Años</span></div>
+              <div class="home-counter-unit"><span class="home-counter-value" data-counter-unit="months">0</span><span class="home-counter-label">Meses</span></div>
+              <div class="home-counter-unit"><span class="home-counter-value" data-counter-unit="days">0</span><span class="home-counter-label">Días</span></div>
+            </div>
+            <div class="home-counter-row home-counter-row--time">
+              <div class="home-counter-unit"><span class="home-counter-value" data-counter-unit="hours">00</span><span class="home-counter-label">Horas</span></div>
+              <div class="home-counter-unit"><span class="home-counter-value" data-counter-unit="minutes">00</span><span class="home-counter-label">Minutos</span></div>
+              <div class="home-counter-unit"><span class="home-counter-value" data-counter-unit="seconds">00</span><span class="home-counter-label">Segundos</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <%# ── Letter ──
+           Replace the paragraphs below with the letter.
+           Wrap the special text in <span class="home-letter-highlight"> to show it in red. ── %>
+      <article class="home-letter">
+        <p>Hola mi linda Nico ♡</p>
+        <p>Bienvenida a nuestra actualización de <span class="home-letter-highlight">aniversario</span>, espero te gusten los nuevos toques aqui y alla.</p>
+        <p>Hace ya <span class="home-letter-highlight">un año</span> que estamos juntos amor mio. Ha sido un maravilloso año lleno de aventuras nuestras, de risas, 
+          besos, lagrimas, chistes, abrazos, pero sobre todo <span class="home-letter-highlight">amor.</span> </p>
+        <P>Agradezco cada dia haberte conocido, y poder estar en tu vida. <span class="home-letter-highlight">Eres la persona más maravillosa para mi.</span></P>
+        <p>Hace poco escuche que el amor era "estar extaciado por la existencia del otro". Hoy quiero decirte que <span class="home-letter-highlight">asi me siento contigo</span>,
+          cada dia mientras yo tenga aliento, tendre la voluntad y el deseo de estar para ti, de hacer mi dia un poco más atareado por hacer el tuyo
+          más fácil. Quiero hacer todo lo que pueda para ver una sonrisa en tu hermoso rostro, por que eso es lo que me causas a mi a diario.
+        </p>
+        <p>Hoy, mañana y ayer; bajo el sol, la luna o las estrellas; en la tormenta o en la calma; en el reino de los cielos o la ciudad de los fantasmas; <span class="home-letter-highlight">Te Amo</span>.</p>
+        <p class="home-letter-signature">— Tuyo, Rodrigo ♡</p>
+      </article>
+
+      <%# ── Anniversary photo (/js/home/photo.js) ── %>
+      <figure class="home-polaroid">
+        <div class="home-photo" id="homePhoto" data-csrf="<%= csrfToken %>">
+
+          <%# Empty state: click to upload %>
+          <button type="button" class="home-photo-empty" id="homePhotoAdd" <%= photoUrl ? 'hidden' : '' %>>
+            <span class="home-photo-empty-icon" aria-hidden="true">📷</span>
+            <span>Haz clic para agregar nuestra foto ♡</span>
+          </button>
+
+          <img class="home-photo-img" id="homePhotoImg" alt="Nuestra foto de aniversario"
+               <% if (photoUrl) { %>src="<%= photoUrl %>"<% } else { %>hidden<% } %> />
+
+          <%# Change photo (only with a photo) %>
+          <button type="button" class="home-photo-change" id="homePhotoChange" aria-label="Cambiar foto" title="Cambiar foto" <%= photoUrl ? '' : 'hidden' %>>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="17 1 21 5 17 9"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <polyline points="7 23 3 19 7 15"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+          </button>
+
+          <div class="home-photo-loading" id="homePhotoLoading" hidden>Subiendo foto...</div>
+        </div>
+
+        <figcaption class="home-polaroid-caption">Nuestro Primer Aniversario ❤️</figcaption>
+      </figure>
+
+      <input type="file" id="homePhotoInput" accept="image/*" hidden />
+      <p class="rc-alert rc-alert--error home-photo-error" id="homePhotoError" role="alert" hidden></p>
+
+      <p class="rc-divider" aria-hidden="true">✦ ♡ ✦</p>
+
+      <%# ── Future dates (/js/home/calendar.js) ── %>
+      <section class="home-section" aria-labelledby="futureDatesTitle">
+        <h2 class="home-section-title" id="futureDatesTitle">Futuras citas:</h2>
+
+        <div class="rc-calendar home-calendar" data-home-calendar>
+          <div class="calendar-header">
+            <button type="button" class="calendar-nav" data-calendar-nav="prev" aria-label="Mes anterior">‹</button>
+            <span class="calendar-label" data-calendar-label></span>
+            <button type="button" class="calendar-nav" data-calendar-nav="next" aria-label="Mes siguiente">›</button>
+          </div>
+
+          <div class="calendar-grid" data-calendar-month></div>
+
+          <div class="calendar-legend">
+            <span class="legend-item"><span class="legend-dot legend-dot--busy1"></span> Día con cita</span>
+            <span class="legend-item">Pasa el cursor sobre el día ♡</span>
+          </div>
+
+          <%# Enlarged day with the details (filled by calendar.js) %>
+          <div class="home-day-card" id="homeDayCard" role="tooltip" hidden></div>
+        </div>
+
+        <% if (upcomingDates.length === 0) { %>
+          <p class="rc-subtitle">No hay citas futuras todavía ♡</p>
+        <% } %>
+      </section>
+
+    </div><%# /flow-body %>
+  </div><%# /rc-window %>
+</main>
+
+<%# Future dates for calendar.js. "<" is escaped so a name can not close the script tag %>
+<script>
+  window.upcomingDates = <%- JSON.stringify(upcomingDates).replace(/</g, '\\u003c') %>;
+</script>
+<script src="/js/home/salutation.js"></script>
+<script src="/js/home/counter.js"></script>
+<script src="/js/home/photo.js"></script>
+<script src="/js/home/calendar.js"></script>

@@ -4,7 +4,6 @@ Author: R. Hurtado
 Date: 07/07/2026 
 Description: 
 Behavior of the invitation page of the Dates module. (Step 1)
-- Movement of the names in salutation.
 - Movement of the 'no' button when cursor is close.
 - Appearance and close of the modal.
 */
@@ -30,22 +29,6 @@ function moveNoButton(){
     noButton.style.top = y + "px";
 }
 
-/*nextSalutation
-Function responsible for changing the actual salutation every few seconds*/
-function nextSalutation(){
-    salutationText.classList.remove("show");
-    salutationText.classList.add("hide");
-
-    setTimeout(()=>{
-        currentSalutation =
-            (currentSalutation + 1) % salutations.length;
-        salutationText.textContent =
-            salutations[currentSalutation];
-        salutationText.classList.remove("hide");
-        salutationText.classList.add("show");
-    },350);
-}
-
 
 //---------------------------------------------------------------------
 //VARIABLES DECLARATION
@@ -54,18 +37,6 @@ const yesButton = document.getElementById("btnYes");
 const noButton = document.getElementById("btnNo");
 const modal = document.getElementById("yesModal");
 const closeModal = document.getElementById("closeModal");
-
-const salutations = [
-    "Hermosa",
-    "Preciosa",
-    "Belleza",
-    "Mi Princesa",
-    "Mi Reina",
-    "Mi Nico"
-];
-
-const salutationText = document.getElementById("salutationText");
-let currentSalutation = 0;
 
 //---------------------------------------------------------------------
 //REACTIONS TO EVENTS
@@ -116,12 +87,6 @@ noButton.addEventListener("touchstart",(e)=>{
     e.preventDefault();
     moveNoButton();
 });
-
-
-/*Saluation animations*/
-
-salutationText.classList.add("show");
-setInterval(nextSalutation,1800);
 
 
 /*Modificacion de movimiento y creacion de carrusel en invitation*/

@@ -5,7 +5,7 @@
    ============================================================ */
 
 /* ── Google Fonts ── */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Space+Grotesk:wght@400;500;600;700&family=VT323&display=swap');
 @import "tailwindcss";
 @plugin "daisyui";
 @source "../../views/**/*.ejs";
@@ -52,10 +52,14 @@
   /* Typography */
   --rc-font-body:    'Space Grotesk', sans-serif;
   --rc-font-retro:   'VT323', monospace;
+  --rc-font-hand:    'Caveat', cursive;
 }
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Keep the hidden attribute working on elements with their own display */
+[hidden] { display: none !important; }
 
 /* ── Base body ── */
 body {
@@ -115,6 +119,7 @@ body {
   background: var(--rc-pink-mid);
   padding: 8px 14px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   border-bottom: 2px solid var(--rc-pink-border);
@@ -149,6 +154,43 @@ body {
 
 /* Narrow window (forms, e.g. login) */
 .rc-window--narrow { max-width: 420px; }
+
+/* Section navigation inside the window bar (partials/window-nav.ejs)
+   Usage: … <span class="rc-window-title">…</span> <nav class="rc-window-nav"> … </nav> */
+.rc-window-nav {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.rc-nav-btn {
+  font-family: var(--rc-font-retro);
+  font-size: 15px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  color: var(--rc-pink-text);
+  text-decoration: none;
+  padding: 1px 10px;
+  border: 1.5px solid var(--rc-pink-border);
+  border-radius: var(--rc-radius-pill);
+  background: var(--rc-cream);
+  transition: transform 0.1s, background 0.15s;
+}
+
+.rc-nav-btn:hover { background: var(--rc-pink); transform: translateY(-1px); }
+
+.rc-nav-btn--active,
+.rc-nav-btn--active:hover {
+  background: var(--rc-pink-deep);
+  border-color: var(--rc-pink-deep);
+  color: white;
+}
+
+/* Small screens: the section buttons take the place of the title */
+@media (max-width: 480px) {
+  .rc-window-bar:has(.rc-window-nav) .rc-window-title { display: none; }
+}
 
 /* ================================================================
    AVATAR
@@ -293,6 +335,26 @@ body {
   transition: color 0.15s;
 }
 .rc-eye-btn:hover { color: var(--rc-pink-deep); }
+
+/* File input: styled "choose file" button inside the retro input */
+.rc-input--file {
+  padding: 8px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.rc-input--file::file-selector-button {
+  font-family: var(--rc-font-retro);
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--rc-pink-text);
+  background: var(--rc-pink-mid);
+  border: 2px solid var(--rc-pink-border);
+  border-radius: var(--rc-radius-pill);
+  padding: 2px 12px;
+  margin-right: 10px;
+  cursor: pointer;
+}
 
 /* Checkbox */
 .rc-check-row {
@@ -1259,6 +1321,32 @@ body {
     box-shadow:3px 3px 0 var(--rc-pink-deep);
 }
 
+/* "Nueva categoría" card: same size as a category, dashed pink */
+.trap-option--new{
+    border-style:dashed;
+    border-color:var(--rc-pink-border);
+    background:var(--rc-cream);
+    color:var(--rc-pink-deep);
+}
+
+.trap-option--new:hover{
+    box-shadow:3px 3px 0 var(--rc-pink-border);
+}
+
+/* Takes the place of the category image */
+.trap-option-plus{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    height:70px;
+    border-radius:8px;
+    background:var(--rc-pink);
+    font-family:var(--rc-font-retro);
+    font-size:2.4rem;
+    line-height:1;
+}
+
 /* Continue button disabled state overrides the rainbow aura */
 #btnContinue:disabled{
     opacity:.4;
@@ -1532,6 +1620,46 @@ body {
     color:white;
 }
 
+/* "Añadir nueva actividad": same shape as an activity, green */
+.activity-option--new{
+    border-style:dashed;
+    border-color:var(--rc-green-border);
+    background:var(--rc-green);
+    color:var(--rc-green-text);
+}
+
+.activity-option--new .activity-dot{
+    background:white;
+    border-color:var(--rc-green-border);
+}
+
+.activity-option--new:hover{
+    box-shadow:3px 3px 0 var(--rc-green-border);
+}
+
+/* Form inside a modal (new category / new activity) */
+.modal-form{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.85rem;
+}
+
+.modal-form .rc-input:disabled{
+    background:var(--rc-pink);
+    color:var(--rc-muted);
+    cursor:not-allowed;
+}
+
+#btnCreateCategory:disabled,
+#btnCreateActivity:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+    animation:none;
+    box-shadow:3px 3px 0 var(--rc-pink-border);
+}
+
 .activities-loading,
 .activities-error{
     grid-column:1 / -1;
@@ -1656,6 +1784,8 @@ body {
         border-radius:10px;
     }
 
+    .trap-option-plus{ height:100px; border-radius:6px; }
+
     .trap-option img{
         display:block !important;
         width:100%;
@@ -1691,7 +1821,8 @@ body {
 @media (max-width: 380px){
     /* Slightly shorter reels on tiny screens */
     .slot-reel{ aspect-ratio:16 / 6 !important; }
-    .trap-option img{ height:50px; }
+    .trap-option img,
+    .trap-option-plus{ height:50px; }
 }
 
 
@@ -1911,6 +2042,355 @@ body {
     cursor:not-allowed;
     animation:none;
     box-shadow:3px 3px 0 var(--rc-pink-border);
+}
+
+
+/* ================================================================
+   HOME PAGE
+   ================================================================ */
+
+.home-body{
+    align-items:center;
+    text-align:center;
+}
+
+.home-message{
+    font-family:var(--rc-font-retro);
+    font-size:1.5rem;
+    letter-spacing:1px;
+    color:var(--rc-pink-deep);
+}
+
+/* ── Flowers fan + counter ── */
+.home-counter-wrap{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+}
+
+/* The flowers pivot on the same bottom point, so they open like a fan
+   centered on the counter. Angle per flower: --home-flower-angle */
+.home-flowers{
+    position:relative;
+    width:230px;
+    height:80px;
+    margin-bottom:-.55rem;
+}
+
+.home-flower{
+    position:absolute;
+    left:50%;
+    bottom:0;
+    line-height:1;
+    transform-origin:50% 100%;
+    transform:translateX(-50%) rotate(var(--home-flower-angle, 0deg));
+}
+
+.home-flower--outer { font-size:3.2rem; }
+.home-flower--mid   { font-size:3.8rem; }
+.home-flower--center{ font-size:4.6rem; }
+
+/* Stage: gives room to the small flowers and hearts around the counter */
+.home-counter-stage{
+    position:relative;
+    width:min(100%, 420px);
+    padding:.9rem 2.1rem;
+    display:flex;
+    justify-content:center;
+}
+
+.home-counter-deco{
+    position:absolute;
+    font-size:1.15rem;
+    line-height:1;
+    opacity:.75;
+    pointer-events:none;
+    animation:rc-float 5s ease-in-out infinite;
+}
+
+.home-counter-deco--heart{
+    font-size:1rem;
+    color:var(--rc-pink-deep);
+}
+
+/* One colored container, two rows: date (bigger) and time (smaller) */
+.home-counter{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.5rem;
+    background:linear-gradient(135deg, var(--rc-pink-mid), var(--rc-yellow));
+    border:2px solid var(--rc-pink-border);
+    border-radius:18px;
+    box-shadow:var(--rc-shadow-pink);
+    padding:.75rem;
+}
+
+.home-counter-row{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:.45rem;
+    width:100%;
+}
+
+.home-counter-row--time{ width:82%; }
+
+.home-counter-unit{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.1rem;
+    border:2px solid;
+    border-radius:10px;
+}
+
+.home-counter-value{
+    font-family:var(--rc-font-retro);
+    line-height:1;
+}
+
+.home-counter-label{
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+/* Row 1: años / meses / días */
+.home-counter-row--date .home-counter-unit{
+    background:var(--rc-pink-deep);
+    border-color:var(--rc-pink-text);
+    box-shadow:2px 2px 0 var(--rc-pink-text);
+    padding:.4rem .2rem .35rem;
+}
+.home-counter-row--date .home-counter-value{ font-size:2.1rem; color:white; }
+.home-counter-row--date .home-counter-label{ font-size:9px; color:rgba(255,255,255,.85); }
+
+/* Row 2: horas / minutos / segundos */
+.home-counter-row--time .home-counter-unit{
+    background:var(--rc-yelloe-mid);
+    border-color:var(--rc-yellow-border);
+    box-shadow:2px 2px 0 var(--rc-yellow-border);
+    padding:.25rem .15rem .2rem;
+}
+.home-counter-row--time .home-counter-value{ font-size:1.35rem; color:var(--rc-blue-text); }
+.home-counter-row--time .home-counter-label{ font-size:8px; color:var(--rc-blue-text); opacity:.8; }
+
+/* ── Letter ── */
+.home-letter{
+    width:100%;
+    max-width:640px;
+    display:flex;
+    flex-direction:column;
+    gap:.8rem;
+    background:white;
+    border:2px solid var(--rc-pink-border);
+    border-radius:16px;
+    box-shadow:var(--rc-shadow-pink);
+    padding:1.75rem 1.75rem 1.25rem;
+    text-align:left;
+    font-size:14px;
+    line-height:1.7;
+    color:var(--rc-pink-text);
+}
+
+.home-letter-highlight{
+    color:#d62f4b;
+    font-weight:700;
+}
+
+.home-letter-signature{
+    align-self:flex-end;
+    text-align:right;
+    font-family:var(--rc-font-hand);
+    font-size:1.6rem;
+    color:var(--rc-pink-deep);
+}
+
+/* ── Photo (polaroid) ── */
+.home-polaroid{
+    width:min(100%, 520px);
+    margin:0;
+    background:white;
+    padding:14px 14px 0;
+    border:1px solid #eadde5;
+    box-shadow:6px 6px 0 var(--rc-pink-border);
+    transform:rotate(-1.5deg);
+}
+
+.home-photo{
+    position:relative;
+    width:100%;
+    aspect-ratio:4 / 3;
+    overflow:hidden;
+    background:var(--rc-pink);
+}
+
+.home-photo-empty{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:.5rem;
+    border:3px dashed var(--rc-pink-border);
+    background:
+        repeating-linear-gradient(45deg, var(--rc-pink) 0 12px, var(--rc-cream) 12px 24px);
+    color:var(--rc-pink-deep);
+    font-family:var(--rc-font-retro);
+    font-size:1.3rem;
+    letter-spacing:1px;
+    cursor:pointer;
+    transition:border-color .15s;
+}
+
+.home-photo-empty:hover{ border-color:var(--rc-pink-deep); }
+
+.home-photo-empty-icon{ font-size:3rem; line-height:1; }
+
+.home-photo-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+/* Change photo: small semi-transparent button, bottom right */
+.home-photo-change{
+    position:absolute;
+    right:10px;
+    bottom:10px;
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.55);
+    color:var(--rc-pink-text);
+    opacity:.75;
+    cursor:pointer;
+    transition:opacity .15s, background .15s;
+}
+
+.home-photo-change:hover,
+.home-photo-change:focus-visible{
+    opacity:1;
+    background:rgba(255,255,255,.85);
+}
+
+.home-photo-loading{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,249,240,.8);
+    font-family:var(--rc-font-retro);
+    font-size:1.4rem;
+    color:var(--rc-pink-deep);
+}
+
+.home-polaroid-caption{
+    font-family:var(--rc-font-hand);
+    font-size:1.9rem;
+    color:#4a3a44;
+    padding:.55rem .5rem .8rem;
+}
+
+.home-photo-error{ max-width:520px; }
+
+/* ── Futuras citas ── */
+.home-section{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:1rem;
+}
+
+.home-section-title{
+    font-family:var(--rc-font-retro);
+    font-size:2rem;
+    color:var(--rc-pink-text);
+}
+
+.home-calendar{ position:relative; }
+
+.calendar-day.has-date{
+    font-weight:700;
+    cursor:pointer;
+}
+
+.calendar-day.is-today{
+    box-shadow:inset 0 0 0 1.5px var(--rc-pink-deep);
+}
+
+/* Enlarged day: grows from the hovered day (transform-origin set in JS) */
+.home-day-card{
+    position:absolute;
+    z-index:5;
+    width:190px;
+    display:flex;
+    flex-direction:column;
+    gap:.45rem;
+    background:white;
+    border:2px solid var(--rc-pink-deep);
+    border-radius:14px;
+    box-shadow:4px 4px 0 var(--rc-pink-border);
+    padding:.7rem .8rem;
+    text-align:left;
+}
+
+.home-day-card.is-open{
+    animation:home-day-grow .18s ease-out;
+}
+
+@keyframes home-day-grow{
+    from{ transform:scale(.3); opacity:0; }
+    to  { transform:scale(1);  opacity:1; }
+}
+
+.home-day-card-date{
+    font-family:var(--rc-font-retro);
+    font-size:1.15rem;
+    color:var(--rc-pink-deep);
+    text-transform:capitalize;
+}
+
+.home-day-card-item{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:.2rem;
+    border-top:1px dashed var(--rc-pink-border);
+    padding-top:.45rem;
+    font-size:.78rem;
+    color:var(--rc-pink-text);
+}
+
+.home-day-card-activity{ font-weight:700; }
+
+.home-day-card-time{ color:var(--rc-muted); }
+
+@media (max-width: 600px){
+    .home-flowers{ width:190px; height:94px; }
+    .home-flower--outer { font-size:2.7rem; }
+    .home-flower--mid   { font-size:3.2rem; }
+    .home-flower--center{ font-size:3.9rem; }
+    .home-counter-stage{ padding:.8rem 1.6rem; }
+    .home-letter{ padding:1.25rem 1.1rem 1rem; }
+    .home-polaroid{ transform:none; }
+    .home-message{ font-size:1.3rem; }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .home-day-card.is-open{ animation:none; }
+    .home-counter-deco{ animation:none; }
 }
 
 

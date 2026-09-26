@@ -105,6 +105,10 @@ app.use('/', routesLanding);
 const routesAuth = require('./src/routes/auth.routes');
 app.use('/auth', routesAuth);
 
+//Home
+const routesHome = require('./src/routes/home.routes');
+app.use('/home', routesHome);
+
 //Dates
 const routesDates = require('./src/routes/dates.routes');
 app.use('/dates', routesDates);

@@ -8,7 +8,9 @@ Routes for the Dates module. Mounted at /dates.
 Actions available:
 - Render invitation page. (Step 1)
 - Render category page. (Step 2)
+- Create a new category with its image (AJAX, multipart)
 - Return available activities for the given category (AJAX)
+- Create a new activity for the given category (AJAX)
 - Render schedule page. (Step 3)
 - Receive the date information. Store information in database. Resend API call.
 Redirect.
@@ -17,13 +19,16 @@ Redirect.
 const express = require('express');
 const router = express.Router();
 const isAuth = require('../middleware/isAuth');
+const uploadImage = require('../middleware/uploadImage');
 
 const datesController = require('../controllers/dates.controller');
 
 //Only available once logged in
 router.get('/invitation', isAuth, datesController.getInvitationPage);
 router.get('/category', isAuth, datesController.getCategoryPage);
+router.post('/category', isAuth, uploadImage, datesController.crearCategoria);
 router.get('/activities', isAuth, datesController.getActivitiesByCategory);
+router.post('/activities', isAuth, datesController.crearActividad);
 router.get('/schedule', isAuth, datesController.getSchedulePage);
 router.post('/schedule', isAuth, datesController.saveDate);
 

@@ -5,6 +5,7 @@
       <span class="rc-dot rc-dot--yellow"></span>
       <span class="rc-dot rc-dot--green"></span>
       <span class="rc-window-title">✦ Categoría</span>
+      <%- include('../partials/window-nav', { active: 'dates' }) %>
     </div>
 
     <div class="flow-body">
@@ -96,6 +97,12 @@
                 <span><%= cat.name %></span>
               </button>
             <% }) %>
+
+            <%# ── New category card (opens #newCategoryModal) ── %>
+            <button type="button" class="trap-option trap-option--new" id="btnNewCategory">
+              <span class="trap-option-plus" aria-hidden="true">+</span>
+              <span>Nueva categoría</span>
+            </button>
           </div>
         </div>
         <div style="height: 1 rem;"></div>
@@ -154,7 +161,85 @@
   </div>
 </div>
 
+<%# ── New category modal ── %>
+<div id="newCategoryModal" class="rc-modal">
+  <div class="modal-window">
+    <div class="rc-window-bar">
+      <span class="rc-dot rc-dot--red"></span>
+      <span class="rc-dot rc-dot--yellow"></span>
+      <span class="rc-dot rc-dot--green"></span>
+      <span class="rc-window-title">✦ Crear</span>
+      <button class="modal-close-x" id="closeNewCategoryModal" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <h2 class="rc-title rc-title--sm">Nueva categoria</h2>
+      <p class="rc-alert rc-alert--error" id="newCategoryError" role="alert" hidden></p>
+
+      <form id="newCategoryForm" class="modal-form" action="/dates/category" method="POST" enctype="multipart/form-data" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+        <div class="rc-field">
+          <label class="rc-label" for="newCategoryName">// Nombre</label>
+          <div class="rc-input-wrap">
+            <input class="rc-input rc-input--bare" type="text" id="newCategoryName" name="name" maxlength="60" placeholder="Picnic ♡" required />
+          </div>
+        </div>
+
+        <div class="rc-field">
+          <label class="rc-label" for="newCategoryImage">// Imagen</label>
+          <div class="rc-input-wrap">
+            <input class="rc-input rc-input--bare rc-input--file" type="file" id="newCategoryImage" name="image" accept="image/*" required />
+          </div>
+        </div>
+
+        <button type="submit" id="btnCreateCategory" class="rc-btn rc-btn--pink rc-btn--wide rainbow">Crear</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%# ── New activity modal ── %>
+<div id="newActivityModal" class="rc-modal">
+  <div class="modal-window">
+    <div class="rc-window-bar">
+      <span class="rc-dot rc-dot--red"></span>
+      <span class="rc-dot rc-dot--yellow"></span>
+      <span class="rc-dot rc-dot--green"></span>
+      <span class="rc-window-title">✦ Crear</span>
+      <button class="modal-close-x" id="closeNewActivityModal" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <h2 class="rc-title rc-title--sm">Nueva Actividad</h2>
+      <p class="rc-alert rc-alert--error" id="newActivityError" role="alert" hidden></p>
+
+      <form id="newActivityForm" class="modal-form" action="/dates/activities" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <input type="hidden" name="categoryId" id="newActivityCategoryId" value="" />
+
+        <div class="rc-field">
+          <label class="rc-label" for="newActivityCategory">// Categoría</label>
+          <div class="rc-input-wrap">
+            <input class="rc-input rc-input--bare" type="text" id="newActivityCategory" disabled />
+          </div>
+        </div>
+
+        <div class="rc-field">
+          <label class="rc-label" for="newActivityName">// Actividad</label>
+          <div class="rc-input-wrap">
+            <input class="rc-input rc-input--bare" type="text" id="newActivityName" name="name" maxlength="80" placeholder="Ver el atardecer ♡" required />
+          </div>
+        </div>
+
+        <button type="submit" id="btnCreateActivity" class="rc-btn rc-btn--pink rc-btn--wide rainbow">Crear</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%# Categories for category.js. "<" is escaped so a name can not close the script tag %>
 <script>
-  window.categories = <%- JSON.stringify(categories) %>;
+  window.categories = <%- JSON.stringify(categories).replace(/</g, '\\u003c') %>;
 </script>
 <script src="/js/category.js"></script>

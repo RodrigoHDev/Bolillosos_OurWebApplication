@@ -1,0 +1,17 @@
+<%# ── Window navigation ──
+     Section buttons placed inside the rc-window-bar of the private pages
+     (not landing / login). Gallery leads to 404 until it is created.
+     Usage (from pages/): include('../partials/window-nav', { active: 'home' })
+     active: 'home' | 'dates' | 'gallery' | '' ── %>
+<% const navActive = typeof active !== 'undefined' ? active : ''; %>
+<nav class="rc-window-nav" aria-label="Secciones">
+  <a href="/home"
+     class="rc-nav-btn <%= navActive === 'home' ? 'rc-nav-btn--active' : '' %>"
+     <%- navActive === 'home' ? 'aria-current="page"' : '' %>>Home</a>
+  <a href="/dates/invitation"
+     class="rc-nav-btn <%= navActive === 'dates' ? 'rc-nav-btn--active' : '' %>"
+     <%- navActive === 'dates' ? 'aria-current="page"' : '' %>>Cita</a>
+  <a href="/gallery"
+     class="rc-nav-btn <%= navActive === 'gallery' ? 'rc-nav-btn--active' : '' %>"
+     <%- navActive === 'gallery' ? 'aria-current="page"' : '' %>>Gallery</a>
+</nav>
