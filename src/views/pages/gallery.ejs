@@ -1,0 +1,167 @@
+<main class="rc-center">
+  <div class="rc-window flow-window">
+    <div class="rc-window-bar">
+      <span class="rc-dot rc-dot--red"></span>
+      <span class="rc-dot rc-dot--yellow"></span>
+      <span class="rc-dot rc-dot--green"></span>
+      <span class="rc-window-title">✦ Galería</span>
+      <%- include('../partials/window-nav', { active: 'gallery' }) %>
+    </div>
+
+    <div class="flow-body gallery-body">
+
+      <%# ── Title + new photo (opens #newPhotoModal) ── %>
+      <div class="hero-title gallery-header">
+        <h1 class="hero-greeting">Our Gallery</h1>
+        <button type="button" class="rc-btn rc-btn--pink rainbow" id="btnNewPhoto">+ Nueva foto</button>
+      </div>
+
+      <%# ── Anniversary year (one year per page: ?year=N).
+           Both buttons are always shown; disabled when that year does not exist ── %>
+      <nav class="gallery-years" aria-label="Años de aniversario">
+        <% if (previousYear) { %>
+          <a class="rc-btn rc-btn--ghost rc-btn--sm gallery-years-btn" href="/gallery?year=<%= previousYear %>">‹ Año anterior</a>
+        <% } else { %>
+          <button type="button" class="rc-btn rc-btn--ghost rc-btn--sm gallery-years-btn" disabled>‹ Año anterior</button>
+        <% } %>
+
+        <div class="gallery-years-heading">
+          <h2 class="gallery-years-title"><%= anniversaryTitle %></h2>
+          <p class="gallery-years-range"><%= rangeLabel %></p>
+        </div>
+
+        <% if (nextYear) { %>
+          <a class="rc-btn rc-btn--ghost rc-btn--sm gallery-years-btn" href="/gallery?year=<%= nextYear %>">Año siguiente ›</a>
+        <% } else { %>
+          <button type="button" class="rc-btn rc-btn--ghost rc-btn--sm gallery-years-btn" disabled>Año siguiente ›</button>
+        <% } %>
+      </nav>
+
+      <%# ── Aniversario photos: full row with the red ribbon ── %>
+      <% featured.forEach(photo => { %>
+        <button type="button" class="gallery-feature" data-photo-index="<%= photo.index %>" aria-label="Ver foto de <%= photo.dateLabel %>">
+          <img src="<%= photo.url %>" alt="<%= photo.description || photo.dateLabel %>" loading="lazy" />
+          <span class="gallery-ribbon" aria-hidden="true">Aniversario</span>
+          <span class="gallery-feature-caption"><%= photo.dateLabel %></span>
+        </button>
+      <% }) %>
+
+      <%# ── All the photos of the year in one grid, in month order.
+           Empty months get a "+" space. The first item of every month carries
+           the month marker: a vertical line on its left with the month at 90° ── %>
+      <div class="gallery-grid">
+        <% months.forEach(month => { %>
+          <% const items = month.photos.length > 0 ? month.photos : [null]; %>
+          <% items.forEach((photo, position) => { %>
+            <div class="gallery-item <%= position === 0 ? 'gallery-item--month-start' : '' %>">
+              <% if (position === 0) { %>
+                <span class="gallery-month-marker" aria-hidden="true">
+                  <span class="gallery-month-marker-text">
+                    <span class="gallery-month-marker-long"><%= month.label %></span>
+                    <span class="gallery-month-marker-short"><%= month.shortLabel %></span>
+                  </span>
+                </span>
+              <% } %>
+
+              <% if (photo) { %>
+                <button type="button"
+                        class="gallery-tile <%= photo.labelCode ? 'gallery-tile--' + photo.labelCode : '' %>"
+                        data-photo-index="<%= photo.index %>"
+                        aria-label="Ver foto de <%= photo.dateLabel %>">
+                  <img src="<%= photo.url %>" alt="<%= photo.description || photo.dateLabel %>" loading="lazy" />
+                </button>
+              <% } else { %>
+                <button type="button" class="gallery-tile gallery-tile--add" data-add-month="<%= month.value %>"
+                        aria-label="Agregar foto en <%= month.label %>">+</button>
+              <% } %>
+            </div>
+          <% }) %>
+        <% }) %>
+      </div>
+
+    </div><%# /flow-body %>
+  </div><%# /rc-window %>
+</main>
+
+<%# ── New photo modal ── %>
+<div id="newPhotoModal" class="rc-modal">
+  <div class="modal-window">
+    <div class="rc-window-bar">
+      <span class="rc-dot rc-dot--red"></span>
+      <span class="rc-dot rc-dot--yellow"></span>
+      <span class="rc-dot rc-dot--green"></span>
+      <span class="rc-window-title">✦ Crear</span>
+      <button class="modal-close-x" id="closeNewPhotoModal" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <h2 class="rc-title rc-title--sm">Nueva Foto</h2>
+      <p class="rc-alert rc-alert--error" id="newPhotoError" role="alert" hidden></p>
+
+      <form id="newPhotoForm" class="modal-form" action="/gallery/photo" method="POST" enctype="multipart/form-data" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+        <div class="rc-field">
+          <label class="rc-label" for="newPhotoDate">// Mes y año</label>
+          <div class="rc-input-wrap">
+            <input class="rc-input rc-input--bare" type="month" id="newPhotoDate" name="date"
+                   min="<%= minMonth %>" max="<%= maxMonth %>" placeholder="<%= maxMonth %>" required />
+          </div>
+        </div>
+
+        <div class="rc-field">
+          <label class="rc-label" for="newPhotoLabel">// Etiqueta</label>
+          <%# Options filled by gallery.js (GET /gallery/labels) when the modal opens %>
+          <div class="rc-input-wrap">
+            <select class="rc-input rc-input--bare" id="newPhotoLabel" name="labelId">
+              <option value="">Sin etiqueta</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="rc-field">
+          <label class="rc-label" for="newPhotoDescription">// Descripción (opcional)</label>
+          <div class="rc-input-wrap">
+            <input class="rc-input rc-input--bare" type="text" id="newPhotoDescription" name="description" maxlength="120" placeholder="Nuestra primera cita ♡" />
+          </div>
+        </div>
+
+        <div class="rc-field">
+          <label class="rc-label" for="newPhotoImage">// Foto</label>
+          <div class="rc-input-wrap">
+            <input class="rc-input rc-input--bare rc-input--file" type="file" id="newPhotoImage" name="image" accept="image/*" required />
+          </div>
+        </div>
+
+        <button type="submit" id="btnCreatePhoto" class="rc-btn rc-btn--pink rc-btn--wide rainbow">Crear</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%# ── Photo viewer (filled by gallery.js) ── %>
+<div id="galleryViewer" class="gallery-viewer" role="dialog" aria-modal="true" aria-label="Foto" hidden>
+  <button type="button" class="gallery-viewer-close" id="galleryViewerClose" aria-label="Cerrar">&times;</button>
+
+  <div class="gallery-viewer-info">
+    <span class="gallery-viewer-date" id="galleryViewerDate"></span>
+    <span class="gallery-label" id="galleryViewerLabel" hidden></span>
+    <p class="gallery-viewer-desc" id="galleryViewerDesc" hidden></p>
+  </div>
+
+  <button type="button" class="gallery-viewer-nav gallery-viewer-nav--prev" id="galleryViewerPrev" aria-label="Foto anterior">‹</button>
+  <img class="gallery-viewer-img" id="galleryViewerImg" alt="" />
+  <button type="button" class="gallery-viewer-nav gallery-viewer-nav--next" id="galleryViewerNext" aria-label="Foto siguiente">›</button>
+</div>
+
+<%# Photos of the year for gallery.js. "<" is escaped so a text can not close the script tag %>
+<script>
+  window.galleryPhotos = <%- JSON.stringify(viewerPhotos.map(photo => ({
+    url: photo.url,
+    dateLabel: photo.dateLabel,
+    description: photo.description,
+    labelName: photo.labelName,
+    labelCode: photo.labelCode
+  }))).replace(/</g, '\\u003c') %>;
+</script>
+<script src="/js/gallery.js"></script>

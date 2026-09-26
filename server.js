@@ -113,6 +113,10 @@ app.use('/home', routesHome);
 const routesDates = require('./src/routes/dates.routes');
 app.use('/dates', routesDates);
 
+//Gallery
+const routesGallery = require('./src/routes/gallery.routes');
+app.use('/gallery', routesGallery);
+
 
 /*Additional catch over expired csurf verification code
 Usage of the flash middleware to show the error*/

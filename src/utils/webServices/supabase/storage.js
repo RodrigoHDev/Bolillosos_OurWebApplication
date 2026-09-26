@@ -8,6 +8,8 @@ Bucket used: images (public).
 - Category images: stored at the root of the bucket. The public URL is stored
   in public.category.image
 - Home photo: stored in the folder home/. The newest file is the one shown.
+- Gallery photos: stored in the folder gallery/. The storage path is stored
+  in public.gallery.path_image and the public URL is built from it.
 */
 
 const path = require('path');
@@ -16,6 +18,7 @@ const supabase = require('./supabase');
 // Centralize the bucket so you only have to change it in one place
 const IMAGES_BUCKET = 'images';
 const HOME_PHOTO_FOLDER = 'home';
+const GALLERY_FOLDER = 'gallery';
 
 
 /* AUXILIAR FUNCTIONS */
@@ -46,6 +49,19 @@ async function uploadFile(filePath, file) {
         .getPublicUrl(filePath);
 
     return { filePath, publicUrl: data.publicUrl };
+}
+
+/*removeFile
+Auxiliar function that removes an uploaded file. Errors are only logged*/
+
+async function removeFile(filePath) {
+    const { error } = await supabase.storage
+        .from(IMAGES_BUCKET)
+        .remove([filePath]);
+
+    if (error) {
+        console.error(error);
+    }
 }
 
 /*listHomePhotos
@@ -79,13 +95,7 @@ const uploadCategoryImage = async function uploadCategoryImage(file) {
 Function that removes an uploaded image (used when the insert fails)*/
 
 const removeCategoryImage = async function removeCategoryImage(filePath) {
-    const { error } = await supabase.storage
-        .from(IMAGES_BUCKET)
-        .remove([filePath]);
-
-    if (error) {
-        console.error(error);
-    }
+    await removeFile(filePath);
 };
 
 //------------------------------------------------------
@@ -137,9 +147,41 @@ const uploadHomePhoto = async function uploadHomePhoto(file) {
     return stored;
 };
 
+//------------------------------------------------------
+/*uploadGalleryImage
+Function that uploads a gallery photo into the gallery folder and returns
+the stored path and its public URL*/
+
+const uploadGalleryImage = async function uploadGalleryImage(file) {
+    return uploadFile(`${GALLERY_FOLDER}/${buildFileName(file)}`, file);
+};
+
+//------------------------------------------------------
+/*removeGalleryImage
+Function that removes an uploaded gallery photo (used when the insert fails)*/
+
+const removeGalleryImage = async function removeGalleryImage(filePath) {
+    await removeFile(filePath);
+};
+
+//------------------------------------------------------
+/*getImageUrl
+Function that builds the public URL of a stored path (no request is made)*/
+
+const getImageUrl = function getImageUrl(filePath) {
+    const { data } = supabase.storage
+        .from(IMAGES_BUCKET)
+        .getPublicUrl(filePath);
+
+    return data.publicUrl;
+};
+
 module.exports = {
     uploadCategoryImage,
     removeCategoryImage,
     getHomePhotoUrl,
     uploadHomePhoto,
+    uploadGalleryImage,
+    removeGalleryImage,
+    getImageUrl,
 };

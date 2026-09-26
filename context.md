@@ -42,11 +42,13 @@ src/
     home.controller.js         getHomePage, uploadPhoto
     auth.controller.js         getLogin, doLogin, getLogout (unused, no route)
     dates.controller.js        getInvitationPage, getCategoryPage, crearCategoria, getActivitiesByCategory, crearActividad, getSchedulePage, saveDate
+    gallery.controller.js      getGalleryPage, createPhoto (anniversary-year helpers at the top)
   routes/
     landing.routes.js          GET /
     home.routes.js             /home (all behind isAuth)
     auth.routes.js             GET|POST /auth/login
     dates.routes.js            /dates/* (all behind isAuth)
+    gallery.routes.js          /gallery (all behind isAuth)
   middleware/
     flash.js                   session.success/error → res.locals, then cleared
     isAuth.js                  checks session.isAuth; otherwise redirects to '/'
@@ -55,14 +57,16 @@ src/
   utils/
     main.js                    empty
     webServices/supabase/supabase.js      Supabase client singleton (ws transport)
-    webServices/supabase/storage.js       bucket 'images' (IMAGES_BUCKET): uploadCategoryImage / removeCategoryImage (bucket root), getHomePhotoUrl / uploadHomePhoto (folder home/, newest file wins, older ones removed)
+    webServices/supabase/authClient.js    createAuthClient(): new client per login, session not kept
+    webServices/supabase/storage.js       bucket 'images' (IMAGES_BUCKET): uploadCategoryImage / removeCategoryImage (bucket root), getHomePhotoUrl / uploadHomePhoto (folder home/, newest file wins, older ones removed), uploadGalleryImage / removeGalleryImage (folder gallery/), getImageUrl(path)
     webServices/resend/resend.js          sendAppointmentEmail, sendResetEmail (unused)
     webServices/resend/template.js        appointmentEmail(data) → HTML string
     webServices/resend/icsBuilder.js      buildIcsContent({summary, description, startIso, endIso, isRange})
     webServices/resend/appointmentFormat.js  formatAppointmentDateTime(start, end) → {dateText, timeText, isRange}
   views/
     layout.ejs                 <head>, floating decorations, flash toast + auto-dismiss
-    partials/window-nav.ejs    Home / Cita / Gallery buttons for the window bar (param active); used on home, the 3 date steps, and 404 when logged in
+    partials/window-nav.ejs    Home / Cita / Gallery buttons for the window bar (param active); used on home, gallery, the 3 date steps, and 404 when logged in
+    pages/gallery.ejs          "Our Gallery": one anniversary year, Aniversario photos on top, then one 4-column grid, newest month and photo first ("+" for empty months); the first item of each month has a vertical line with the month at 90° (short "Oct 2025" on mobile); new photo modal, viewer
     pages/home.ejs             main page after login: greeting, counter, letter, polaroid photo, Futuras citas calendar
     pages/landing.ejs          public landing (nav, hero, novedades, sobre nosotros, secciones, footer)
     pages/login.ejs            login form (email + password, eye toggle)
@@ -75,6 +79,7 @@ src/
     js/invitation.js           step 1 behavior (salutation rotator, No button, modal, carousel)
     js/category.js             step 2 behavior (slot machine, trap, activities modal/AJAX)
     js/schedule.js             step 3 behavior (calendar heatmap, range/hour selection, AJAX submit)
+    js/gallery.js              gallery behavior (new photo modal + AJAX upload, viewer with arrows / keyboard / swipe)
     js/home/salutation.js      home greeting rotator (moved here from the invitation page)
     js/home/counter.js         anniversary counter since 2025-09-30 12:00 America/Mexico_City (Intl, month-end clamped)
     js/home/photo.js           photo upload/change (POST /home/photo, CSRF-Token header)
@@ -110,7 +115,9 @@ Every view receives `title`. Flash messages are set with `request.session.succes
 | POST | `/auth/login` | – | `doLogin` | Supabase `signInWithPassword`, loads `profiles`, sets `session.isAuth` + `session.user`, redirects to `/home` |
 | GET | `/home` | ✔ | `getHomePage` | Selects future `dates` with the embedded `options(name, category(name))`, gets the photo URL from Storage, and renders `pages/home` with `upcomingDates` [{start,end,activity,category}], `photoUrl`, `csrfToken`. If the dates query fails, it still renders, with a `response.locals.error` toast. |
 | POST | `/home/photo` | ✔ | `uploadImage` → `uploadPhoto` | Multipart `image`, CSRF-Token header. Returns 201 `{success, photoUrl}`. |
-| GET | `/gallery` | – | (none) | Not created yet, so it shows the 404 page |
+| GET | `/gallery?year=N` | ✔ | `getGalleryPage` | N = anniversary year (Oct → Sep; Sep 2025 belongs to year 1). Missing/invalid/future N → current year (Mexico City). Loads `months` and the `gallery` rows `.eq('anniversary_year', N)`. Renders the months of that year up to the current month, newest first. "Año anterior / Año siguiente" buttons are always shown, disabled when that year does not exist (before the 1st or after the current one); `window.galleryPhotos` is injected for the viewer. |
+| GET | `/gallery/labels` | ✔ | `getLabels` | JSON `{success, labels:[{id,name,code}]}`. Requested by `gallery.js` every time the new photo modal opens to fill the label dropdown. |
+| POST | `/gallery/photo` | ✔ | `uploadImage` → `createPhoto` | Multipart `{date: 'YYYY-MM', labelId?, description?, image}`, CSRF token in the `CSRF-Token` header. Date must be between 2025-09 and the current month. Uploads to `images/gallery/`, inserts the row (removes the file if the insert fails), flashes `Nueva foto agregada ♡` and returns 201 `{success, anniversaryYear}`; the client opens that year. |
 | GET | `/dates/invitation` | ✔ | `getInvitationPage` | Reads `public/images/gallery` from disk and renders `pages/invitation` (step 1) |
 | GET | `/dates/category` | ✔ | `getCategoryPage` | Selects `category(id, name, image)` and renders `pages/category` (step 2) with `csrfToken`; `window.categories` is injected with `<` escaped |
 | POST | `/dates/category` | ✔ | `uploadImage` → `crearCategoria` | Multipart `{name, image}`, CSRF token in the `CSRF-Token` header (csurf runs before multer). Checks the name is unique, ignoring case (`.ilike` with escaped wildcards), uploads the image to Storage, and inserts `{name, image: publicUrl}`. If the insert fails, the image is removed. Sets the flash `Nueva Categoria: X creada!` and returns 201 `{success:true}`; the client reloads. 400/409/500 return `{success:false, error}`. |
@@ -163,11 +170,24 @@ public.category
    image text                           (public URL path, e.g. /images/categories/art.jpg)
 ```
 
+Gallery tables (created 09/26/2026):
+
+```
+public.months     id smallint PK (1–12 = month number), name text UNIQUE (Enero … Diciembre)
+public.labels     id uuid PK, name text UNIQUE, code text UNIQUE (aniversario | cumpleanos | importante)
+public.gallery    id uuid PK, created_at, created_by → profiles.id, label_id → labels.id (nullable),
+                  month_id → months.id, year int, description text (nullable),
+                  path_image text UNIQUE (storage path in bucket images, e.g. gallery/…jpg),
+                  anniversary_year int GENERATED = greatest(1, (year - 2025) + (month_id >= 10 ? 1 : 0))
+```
+
+Label styles: `aniversario` = full-row photo on top of the year with a red ribbon; `cumpleanos` = pink border; `importante` = yellow border.
+
 **Naming map between code, UI and DB:** category = `category`. Activity / option = `options`. Date / appointment / cita = `dates`. Profile / user = `profiles`.
 
 Only two profiles exist, one per partner. `saveDate` emails **every** row in `profiles`.
 
-Queries use the anon/service key from env through a single shared client. After login, the server doesn't pass a per-user Supabase session. Auth state lives in the Express session only.
+Queries use the `service_role` key from env through a single shared client (`supabase.js`). The login uses a throwaway client (`authClient.js`, no persisted session): if the shared client signed in, every later query would carry that user's token (role `authenticated`) and RLS would hide rows, e.g. `labels` returned `[]`. Auth state lives in the Express session only.
 
 ---
 

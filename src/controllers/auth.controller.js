@@ -11,6 +11,7 @@ functions as the database calls (Supabase) are performed here.
 //Import of express and supabase
 const { request, response } = require("express");
 const supabase = require ('../utils/webServices/supabase/supabase');
+const createAuthClient = require('../utils/webServices/supabase/authClient');
 
 /*getLogin
 Function responsible for rendering the login page.
@@ -41,8 +42,10 @@ exports.doLogin = async (request, response, next) => {
     try {
 
         /*Signin with Supabase Authenticator System [Supabase]
-        Function signInWithPassword({email, password})*/
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        Function signInWithPassword({email, password})
+        A separate client is used so the shared one keeps querying with the
+        SUPABASE_KEY (see authClient.js)*/
+        const { data, error } = await createAuthClient().auth.signInWithPassword({ email, password });
 
         //Supabase Error Handling
         if (error || !data.user) {

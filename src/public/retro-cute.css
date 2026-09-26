@@ -35,6 +35,10 @@
   --rc-green-border: #60c888;
   --rc-green-text:   #1a5230;
 
+  /* Red (gallery Aniversario ribbon) */
+  --rc-red:          #d7263d;
+  --rc-red-dark:     #9e1b2c;
+
   /* Neutrals */
   --rc-cream:        #fff9f0;
   --rc-muted:        #c080a0;
@@ -2391,6 +2395,346 @@ body {
 @media (prefers-reduced-motion: reduce){
     .home-day-card.is-open{ animation:none; }
     .home-counter-deco{ animation:none; }
+}
+
+
+/* ================================================================
+   GALLERY PAGE
+   ================================================================ */
+
+.gallery-header{ gap:1rem; }
+
+/* Anniversary year: ‹ previous · title · next › */
+.gallery-years{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:1rem;
+    padding:.75rem 0;
+    border-top:2px dashed var(--rc-pink-border);
+    border-bottom:2px dashed var(--rc-pink-border);
+}
+
+.gallery-years > :first-child{ justify-self:start; }
+.gallery-years > :last-child { justify-self:end; }
+
+.gallery-years-heading{ text-align:center; }
+
+.gallery-years-btn{ white-space:nowrap; }
+
+.gallery-years-btn:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+    transform:none;
+    box-shadow:none;
+}
+
+.gallery-years-title{
+    font-family:var(--rc-font-retro);
+    font-size:2rem;
+    letter-spacing:1px;
+    color:var(--rc-pink-text);
+    line-height:1.1;
+}
+
+.gallery-years-range{
+    font-size:.82rem;
+    color:var(--rc-muted);
+}
+
+/* Aniversario: full row, bigger, red ribbon */
+.gallery-feature{
+    position:relative;
+    display:block;
+    width:min(100%, 620px);
+    aspect-ratio:3 / 2;
+    margin:0 auto;
+    padding:0;
+    border:4px solid var(--rc-red);
+    border-radius:14px;
+    overflow:hidden;
+    background:var(--rc-pink);
+    box-shadow:5px 5px 0 var(--rc-red-dark);
+    cursor:pointer;
+    transition:transform .15s, box-shadow .15s;
+}
+
+.gallery-feature:hover{
+    transform:translate(-1px,-1px);
+    box-shadow:7px 7px 0 var(--rc-red-dark);
+}
+
+.gallery-feature img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.gallery-ribbon{
+    position:absolute;
+    top:22px;
+    left:-46px;
+    width:180px;
+    transform:rotate(-45deg);
+    background:var(--rc-red);
+    color:white;
+    font-family:var(--rc-font-retro);
+    font-size:1.15rem;
+    letter-spacing:1px;
+    text-align:center;
+    padding:3px 0;
+    box-shadow:0 3px 0 var(--rc-red-dark);
+}
+
+.gallery-feature-caption{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    padding:1.6rem .9rem .5rem;
+    background:linear-gradient(transparent, rgba(0,0,0,.55));
+    color:white;
+    font-family:var(--rc-font-retro);
+    font-size:1.3rem;
+    letter-spacing:1px;
+    text-align:right;
+}
+
+/* All the photos of the year in one 4-column grid, in month order.
+   The column gap (and the left padding, for the first column) holds the
+   month marker of the first photo of every month */
+.gallery-grid{
+    --gallery-gap:1.4rem;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    column-gap:var(--gallery-gap);
+    row-gap:.8rem;
+    padding-left:var(--gallery-gap);
+}
+
+.gallery-item{ position:relative; }
+
+/* Month marker: vertical line on the left of the photo, month at 90° over it */
+.gallery-month-marker{
+    position:absolute;
+    top:0;
+    bottom:0;
+    right:100%;
+    width:var(--gallery-gap);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.gallery-month-marker::before{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:50%;
+    border-left:2px solid var(--rc-pink-deep);
+    transform:translateX(-50%);
+}
+
+/* The window background cuts the line behind the text */
+.gallery-month-marker-text{
+    position:relative;
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+    max-height:100%;
+    overflow:hidden;
+    padding:.35rem 0;
+    background:var(--rc-cream);
+    font-family:var(--rc-font-retro);
+    font-size:1.05rem;
+    letter-spacing:1px;
+    line-height:1;
+    white-space:nowrap;
+    color:var(--rc-pink-deep);
+}
+
+.gallery-month-marker-short{ display:none; }
+
+.gallery-tile{
+    position:relative;
+    display:block;
+    width:100%;
+    aspect-ratio:1;
+    padding:0;
+    border:2px solid var(--rc-pink-border);
+    border-radius:10px;
+    overflow:hidden;
+    background:var(--rc-pink);
+    cursor:pointer;
+    transition:transform .15s, box-shadow .15s;
+}
+
+.gallery-tile img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.gallery-tile:hover{
+    transform:translate(-1px,-1px);
+    box-shadow:3px 3px 0 var(--rc-pink-border);
+}
+
+/* Labels */
+.gallery-tile--cumpleanos{ border:4px solid var(--rc-pink-deep); }
+.gallery-tile--importante{ border:4px solid var(--rc-yellow-border); }
+
+/* Empty month: "+" space that opens the modal with its month */
+.gallery-tile--add{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-style:dashed;
+    background:var(--rc-cream);
+    color:var(--rc-pink-deep);
+    font-family:var(--rc-font-retro);
+    font-size:3rem;
+    line-height:1;
+}
+
+.gallery-tile--add:hover{ background:var(--rc-pink); }
+
+.gallery-tile:focus-visible,
+.gallery-feature:focus-visible{
+    outline:3px solid var(--rc-blue-border);
+    outline-offset:2px;
+}
+
+#btnCreatePhoto:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+    animation:none;
+    box-shadow:3px 3px 0 var(--rc-pink-border);
+}
+
+/* Label badge (viewer) */
+.gallery-label{
+    font-size:.75rem;
+    font-weight:700;
+    padding:2px 10px;
+    border-radius:var(--rc-radius-pill);
+    background:var(--rc-pink);
+    color:var(--rc-pink-text);
+}
+
+.gallery-label--aniversario{ background:var(--rc-red); color:white; }
+.gallery-label--cumpleanos { background:var(--rc-pink-mid); color:var(--rc-pink-text); }
+.gallery-label--importante { background:var(--rc-yellow); color:var(--rc-yellow-text); }
+
+/* Viewer: photo in big size, month and year in the upper right corner */
+.gallery-viewer{
+    position:fixed;
+    inset:0;
+    z-index:1100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:4.5rem 4rem 2rem;
+    background:rgba(20, 8, 16, .93);
+}
+
+.gallery-viewer-img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    border-radius:8px;
+    box-shadow:0 10px 40px rgba(0,0,0,.5);
+}
+
+.gallery-viewer-img--aniversario{ border:4px solid var(--rc-red); }
+.gallery-viewer-img--cumpleanos { border:4px solid var(--rc-pink-deep); }
+.gallery-viewer-img--importante { border:4px solid var(--rc-yellow-border); }
+
+.gallery-viewer-close{
+    position:absolute;
+    top:10px;
+    left:14px;
+    background:none;
+    border:none;
+    color:white;
+    font-size:2.2rem;
+    line-height:1;
+    cursor:pointer;
+    opacity:.8;
+}
+
+.gallery-viewer-close:hover{ opacity:1; }
+
+.gallery-viewer-info{
+    position:absolute;
+    top:12px;
+    right:16px;
+    max-width:min(60%, 320px);
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:.3rem;
+    color:white;
+    text-align:right;
+}
+
+.gallery-viewer-date{
+    font-family:var(--rc-font-retro);
+    font-size:1.7rem;
+    letter-spacing:1px;
+    line-height:1;
+}
+
+.gallery-viewer-desc{
+    font-size:.85rem;
+    opacity:.85;
+}
+
+.gallery-viewer-nav{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:44px;
+    height:44px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.15);
+    color:white;
+    font-size:2rem;
+    line-height:1;
+    cursor:pointer;
+    transition:background .15s;
+}
+
+.gallery-viewer-nav:hover{ background:rgba(255,255,255,.3); }
+.gallery-viewer-nav--prev{ left:10px; }
+.gallery-viewer-nav--next{ right:10px; }
+
+@media (max-width: 600px){
+    .gallery-years{ gap:.5rem; }
+    .gallery-years-btn{ padding-left:.6rem; padding-right:.6rem; font-size:.75rem; }
+    .gallery-years-title{ font-size:1.5rem; }
+    .gallery-grid{ --gallery-gap:1rem; row-gap:.45rem; }
+    .gallery-month-marker-text{ font-size:.85rem; letter-spacing:0; padding:.2rem 0; }
+    .gallery-month-marker-long { display:none; }
+    .gallery-month-marker-short{ display:inline; }
+    .gallery-tile{ border-radius:8px; }
+    .gallery-tile--add{ font-size:2rem; }
+    .gallery-ribbon{ top:14px; left:-52px; font-size:.95rem; }
+    .gallery-feature-caption{ font-size:1.1rem; }
+
+    /* Arrows move under the photo; the photo keeps the full width */
+    .gallery-viewer{ padding:5.5rem .5rem 4.5rem; }
+    .gallery-viewer-nav{ top:auto; bottom:14px; transform:none; }
+    .gallery-viewer-nav--prev{ left:calc(50% - 56px); }
+    .gallery-viewer-nav--next{ right:calc(50% - 56px); }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .gallery-feature,
+    .gallery-tile{ transition:none; }
 }
 
 
